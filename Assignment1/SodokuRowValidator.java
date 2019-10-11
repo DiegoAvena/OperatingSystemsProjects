@@ -5,7 +5,7 @@ class SodokuRowValidator extends SodukuValidator implements Runnable {
   private int numberOfRowsToValidate;
   private int rowToStartValidatingAt;
 
-  public SodokuRowValidator(int numberOfRowsToValidate, int rowToStartValidatingAt, boolean[][] arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked, int[][]sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
+  public SodokuRowValidator(int numberOfRowsToValidate, int rowToStartValidatingAt, int[][][] arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked, int[][]sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
 
     this.numberOfRowsToValidate = numberOfRowsToValidate;
     this.rowToStartValidatingAt = rowToStartValidatingAt;
@@ -36,11 +36,12 @@ class SodokuRowValidator extends SodukuValidator implements Runnable {
 
       for (int column = 0; column < 9; column++) {
 
-        if ((arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1]) != true) {
+        if ((arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1]) == null) {
 
-          //System.out.println("Checking column: "+(column + 1) + "row: "+(row + 1));
-          //no error, this number has not yet appeared in this row, so now mark that it has appeared and move to next column in this row:
-          arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1] = true;
+          //no error, this number has not yet appeared in this row, so now mark that it has appeared by storing its grid location:
+          arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1] = new int[2];
+          arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][0] = row;
+          arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][1] = column;
 
         }
         else {
@@ -55,7 +56,7 @@ class SodokuRowValidator extends SodukuValidator implements Runnable {
 
           */
           //Prevent adding of duplicates:
-          ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, "");
+          ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][1], "");
           if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
             listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);

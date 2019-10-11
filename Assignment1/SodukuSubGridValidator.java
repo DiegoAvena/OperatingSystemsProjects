@@ -7,13 +7,13 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
   private int currentGridNumber;
 
-  public SodokuSubGridValidator(int numberOfSubGridsToValidate, boolean[][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked, int[] gridToStartValidationAt, int[][] sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
+  public SodokuSubGridValidator(int numberOfSubGridsToValidate, int[][][] arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked, int[] gridToStartValidationAt, int[][] sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
 
     this.numberOfSubGridsToValidate = numberOfSubGridsToValidate;
     this.gridToStartValidationAt = new int[2];
     this.gridToStartValidationAt[0] = gridToStartValidationAt[0];
     this.gridToStartValidationAt[1] = gridToStartValidationAt[1];
-    this.arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked = arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked;
+    this.arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked = arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked;
     this.sodukuGrid = sodukuGrid;
     this.listOfErrorsAndSuggestionsThatHaveBeenDetected = listOfErrorsAndSuggestionsThatHaveBeenDetected;
 
@@ -49,11 +49,13 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
         while ((column - gridToStartValidationAt[1]) < 3) {
 
-          if (arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] != true) {
+          if (arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] == null) {
 
             //System.out.println("Checking grid, "+" Column: "+(column + 1) + "row: "+(row + 1));
             //this value is not yet in this grid, so no error, but now signal that it is in this grid:
-            arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] = true;
+            arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] = new int[2];
+            arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0] = row;
+            arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1] = column;
 
           }
           else {
@@ -69,7 +71,7 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
             */
             //Prevent adding of duplicates:
-            ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, "");
+            ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1], "");
             if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
               listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
@@ -87,7 +89,7 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
       gridToStartValidationAt[1] = gridToStartValidationAt[1] + 3; //Move to starting column in next grid on the right
       numberOfSubGridsValidated++;
       currentGridNumber++;
-      
+
     }
 
   }

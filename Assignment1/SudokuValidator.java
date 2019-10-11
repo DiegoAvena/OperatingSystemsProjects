@@ -7,9 +7,9 @@ import java.util.ArrayList;
 class SodukuValidator {
 
   protected int[][] sodukuGrid;
-  protected boolean[][] arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
-  protected boolean[][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
-  protected boolean[][] arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
+  protected int[][][] arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
+  protected int[][][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
+  protected int[][][] arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
 
   protected ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected;
 
@@ -22,21 +22,142 @@ class SodukuValidator {
 
   }
 
-  public boolean[][] getArrayOfArrayOfcurrentValuesFoundInRowsBeingChecked() {
+  public int[][][] getArrayOfArrayOfcurrentValuesFoundInRowsBeingChecked() {
 
     return arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked;
 
   }
 
-  public boolean[][] getArrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked() {
+  public int[][][] getArrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked() {
 
     return arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked;
 
   }
 
-  public boolean[][] getArrayOfArrayOfcurrentValuesFoundInGridsBeingChecked() {
+  public int[][][] getArrayOfArrayOfcurrentValuesFoundInGridsBeingChecked() {
 
     return arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked;
+
+  }
+
+  private void makeSuggestion(int errorNumber) {
+
+    int errorRow = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError();
+    int errorColumn = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError();
+
+    int rowOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith();
+    int columnOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith();
+
+    int gridErrorWasIn = determineGrid(errorRow, errorColumn);
+
+    //Determine if the assumed error is indeed the cause of the error:
+    boolean rowOfAssumedErrorIsMissingSomething = false;
+    for (int i = 0; i < 9; i++) {
+
+      if (arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[errorRow][i] == null) {
+
+        //the row this assumed error is in is missing something
+        rowOfAssumedErrorIsMissingSomething = true;
+        break;
+
+      }
+
+    }
+
+    boolean columnOfAssumedErrorIsMissingSomething = false;
+    for (int i = 0; i < 9; i++) {
+
+      if (arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[errorColumn][i] == null) {
+
+        //the row this assumed error is in is missing something
+        columnOfAssumedErrorIsMissingSomething = true;
+        break;
+
+      }
+
+    }
+
+    boolean gridOfAssumedErrorIsMissingSomething = false;
+    for (int i = 0; i < 9; i++) {
+
+      if (arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[gridErrorWasIn][i] == null) {
+
+        //the row this assumed error is in is missing something
+        gridOfAssumedErrorIsMissingSomething = true;
+        break;
+
+      }
+
+    }
+
+    if (rowOfAssumedErrorIsMissingSomething && columnOfAssumedErrorIsMissingSomething && gridOfAssumedErrorIsMissingSomething) {
+
+      //the assumed error is the error, so a suggestion is possible for this error
+      System.out.println("There was an error at row "+(errorRow + 1)+" column "+(errorColumn + 1));
+      System.out.println("Solution: Replace "+sodukuGrid[errorRow][errorColumn]+ " with " +determineSolutionForCell(errorRow, errorColumn));
+
+
+    }
+    else {
+
+      int solution = determineSolutionForCell(rowOfNumberThisValueConflictsWith, columnOfNumberThisValueConflictsWith);
+
+      /*
+
+      Although duplicates are supposed to not be in the arrays above, it can still happen since there is no
+      synchronization. So if this is the case, the if statement above will never enter and the program will go here,
+      but then the solution may be 0 because for a previous version of this duplicate a solution has already been
+      given, so a check is needed here to prevent to reporting of an invalid solution of 0.
+
+      */
+      if (solution != 0) {
+
+        //the error must be the value the assumed error conflicts with, so a suggestion should be made for this one instead:
+        System.out.println("There was an error at row "+(rowOfNumberThisValueConflictsWith + 1)+" column "+(columnOfNumberThisValueConflictsWith + 1));
+        System.out.println("Solution: Replace "+sodukuGrid[rowOfNumberThisValueConflictsWith][columnOfNumberThisValueConflictsWith]+ " with " +solution);
+
+      }
+
+
+    }
+
+  }
+
+  private int determineSolutionForCell(int cellRow, int cellColumn) {
+
+    int[][] arrayOfValuesFoundInRowThisCellIsAt = arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[cellRow];
+    int[][] arrayOfValuesFoundInColumnThisCellIsAt = arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[cellColumn];
+
+    int gridThisCellIsIn = determineGrid(cellRow, cellColumn);
+    int[][] arrayOfValuesFoundInGridThisCellIsAt = arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[gridThisCellIsIn];
+
+    int solutionForCell = 0;
+    for (int i = 0; i < 9; i++) {
+
+      if ((arrayOfValuesFoundInRowThisCellIsAt[i] == null) && (arrayOfValuesFoundInGridThisCellIsAt[i] == null) && (arrayOfValuesFoundInColumnThisCellIsAt[i] == null)) {
+
+        //Signal that the solution given here fixes the missing value here:
+        arrayOfValuesFoundInRowThisCellIsAt[i] = new int[2];
+        arrayOfValuesFoundInRowThisCellIsAt[i][0] = cellRow;
+        arrayOfValuesFoundInRowThisCellIsAt[i][1] = cellColumn;
+
+        arrayOfValuesFoundInColumnThisCellIsAt[i] = new int[2];
+        arrayOfValuesFoundInColumnThisCellIsAt[i][0] = cellRow;
+        arrayOfValuesFoundInColumnThisCellIsAt[i][1] = cellColumn;
+
+        arrayOfValuesFoundInGridThisCellIsAt[i] = new int[2];
+        arrayOfValuesFoundInGridThisCellIsAt[i][0] = cellRow;
+        arrayOfValuesFoundInGridThisCellIsAt[i][1] = cellColumn;
+
+        //return the solution for this cell:
+        solutionForCell = i + 1; //n = index + 1, because n is 1 based and index is 0 based
+        break;
+
+      }
+
+    }
+
+    return solutionForCell;
 
   }
 
@@ -46,12 +167,17 @@ class SodukuValidator {
 
       for (int i = 0; i < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); i++) {
 
-        int errorRow = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getRowOfError();
+        /*int errorRow = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getRowOfError();
         int errorColumn = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getColumnOfError();
+
+        int rowOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getRowOfNumberThisValueConflictsWith();
+        int columnOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getColumnOfNumberThisValueConflictsWith();
 
         int gridErrorWasIn = determineGrid(errorRow, errorColumn);
 
-        System.out.println("There was an error at grid " +gridErrorWasIn+" row "+errorRow+" column "+errorColumn);
+        System.out.println("There was an at row "+(errorRow + 1)+" column "+(errorColumn + 1) + ", this conflicts with the number at row: "+ (rowOfNumberThisValueConflictsWith + 1) + " column: "+(columnOfNumberThisValueConflictsWith + 1));
+        */
+        makeSuggestion(i);
 
       }
 
@@ -164,17 +290,17 @@ class SodukuValidator {
     by situations as described in the previous paragraph.
 
     */
-    arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked = new boolean[9][9];
-    arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked = new boolean[9][9];
-    arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked = new boolean[9][9];
+    arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked = new int[9][9][2];
+    arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked = new int[9][9][2];
+    arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked = new int[9][9][2];
 
     for (int row = 0; row < 9; row++) {
 
       for (int column = 0; column < 9; column++) {
 
-        arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][column] = false;
-        arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[row][column] = false;
-        arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[row][column] = false;
+        arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][column] = null;
+        arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[row][column] = null;
+        arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[row][column] = null;
 
       }
 

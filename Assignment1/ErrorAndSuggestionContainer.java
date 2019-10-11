@@ -10,10 +10,15 @@ class ErrorAndSuggestionContainer {
   int columnOfError;
   String suggestion;
 
-  ErrorAndSuggestionContainer(int rowOfError, int columnOfError, String suggestion) {
+  int rowOfNumberThisValueConflictsWith;
+  int columnOfNumberThisValueConflictsWith;
+
+  ErrorAndSuggestionContainer(int rowOfError, int columnOfError, int rowOfNumberThisValueConflictsWith, int columnOfNumberThisValueConflictsWith,String suggestion) {
 
     this.rowOfError = rowOfError;
     this.columnOfError = columnOfError;
+    this.rowOfNumberThisValueConflictsWith = rowOfNumberThisValueConflictsWith;
+    this.columnOfNumberThisValueConflictsWith = columnOfNumberThisValueConflictsWith;
     this.suggestion = suggestion;
 
   }
@@ -28,7 +33,9 @@ class ErrorAndSuggestionContainer {
 
     ErrorAndSuggestionContainer otherContainer = (ErrorAndSuggestionContainer) otherObject;
 
-    return (this.rowOfError == otherContainer.rowOfError) && (this.columnOfError == otherContainer.columnOfError);
+    return (this.rowOfError == otherContainer.rowOfError) && (this.columnOfError == otherContainer.columnOfError)
+        && (this.rowOfNumberThisValueConflictsWith == otherContainer.rowOfNumberThisValueConflictsWith)
+        && (this.columnOfNumberThisValueConflictsWith == otherContainer.columnOfNumberThisValueConflictsWith);
 
   }
 
@@ -38,6 +45,18 @@ class ErrorAndSuggestionContainer {
 
   }
 
+  int getRowOfNumberThisValueConflictsWith() {
+
+    return rowOfNumberThisValueConflictsWith;
+
+  }
+
+  int getColumnOfNumberThisValueConflictsWith() {
+
+    return columnOfNumberThisValueConflictsWith;
+
+  }
+  
   int getRowOfError() {
 
     return rowOfError;

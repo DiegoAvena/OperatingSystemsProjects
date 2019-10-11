@@ -14,10 +14,12 @@ class SodokuColumnValidator extends SodukuValidator implements Runnable {
       for (int row = 0; row < 9; row++) {
 
         //System.out.println("Checking column: "+(column + 1) + "row: "+(row + 1));
-        if (arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1] != true) {
+        if (arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1] == null) {
 
-          //This value has not yet appeared in this column, so no error to report:
-          arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1] = true;
+          //This value has not yet appeared in this column, so no error to report, store its location in the grid:
+          arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1] = new int[2];
+          arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][0] = row;
+          arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][1] = column;
 
         }
         else {
@@ -31,7 +33,7 @@ class SodokuColumnValidator extends SodukuValidator implements Runnable {
 
           */
           //Prevent adding of duplicates:
-          ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, "");
+          ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][1], "");
           if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
             listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
@@ -53,7 +55,7 @@ class SodokuColumnValidator extends SodukuValidator implements Runnable {
 
   }
 
-  public SodokuColumnValidator(int numberOfColumnsToValidate, int columnToStartValidationAt, boolean[][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked, int[][]sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
+  public SodokuColumnValidator(int numberOfColumnsToValidate, int columnToStartValidationAt, int[][][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked, int[][]sodukuGrid, ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected) {
 
     this.numberOfColumnsToValidate = numberOfColumnsToValidate;
     this.columnToStartValidationAt = columnToStartValidationAt;
