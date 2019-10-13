@@ -6,6 +6,8 @@ import java.util.ArrayList;
 //Base class for soduke validator
 class SodukuValidator {
 
+  protected SodokuUIManager sodokuUIManager;
+
   protected int[][] sodukuGrid;
   protected int[][][] arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
   protected int[][][] arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
@@ -360,6 +362,9 @@ class SodukuValidator {
       }
 
       printGrid();
+
+      sodokuUIManager = new SodokuUIManager(sodukuGrid);
+      sodokuUIManager.setVisible(true);
 
     }
 
