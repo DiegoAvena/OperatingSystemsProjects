@@ -3,6 +3,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import java.awt.Color;
+
 //Base class for soduke validator
 class SodukuValidator {
 
@@ -71,7 +73,7 @@ class SodukuValidator {
 
       if (arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[errorColumn][i] == null) {
 
-        //the row this assumed error is in is missing something
+        //the column this assumed error is in is missing something
         columnOfAssumedErrorIsMissingSomething = true;
         break;
 
@@ -84,7 +86,7 @@ class SodukuValidator {
 
       if (arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[gridErrorWasIn][i] == null) {
 
-        //the row this assumed error is in is missing something
+        //the grid this assumed error is in is missing something
         gridOfAssumedErrorIsMissingSomething = true;
         break;
 
@@ -98,6 +100,10 @@ class SodukuValidator {
       System.out.println("There was an error at row "+(errorRow + 1)+" column "+(errorColumn + 1));
       System.out.println("Solution: Replace "+sodukuGrid[errorRow][errorColumn]+ " with " +determineSolutionForCell(errorRow, errorColumn));
 
+      sodokuUIManager.setResultsText("There was an error at row "+(errorRow + 1)+" column "+(errorColumn + 1));
+      sodokuUIManager.setResultsText("    Solution: Replace "+sodukuGrid[errorRow][errorColumn]+ " with " +determineSolutionForCell(errorRow, errorColumn));
+
+      sodokuUIManager.setPanelColor(Color.RED, errorRow, errorColumn);
 
     }
     else {
@@ -118,8 +124,12 @@ class SodukuValidator {
         System.out.println("There was an error at row "+(rowOfNumberThisValueConflictsWith + 1)+" column "+(columnOfNumberThisValueConflictsWith + 1));
         System.out.println("Solution: Replace "+sodukuGrid[rowOfNumberThisValueConflictsWith][columnOfNumberThisValueConflictsWith]+ " with " +solution);
 
-      }
+        sodokuUIManager.setResultsText("There was an error at row "+(rowOfNumberThisValueConflictsWith + 1)+" column "+(columnOfNumberThisValueConflictsWith + 1));
+        sodokuUIManager.setResultsText("    Solution: Replace "+sodukuGrid[rowOfNumberThisValueConflictsWith][columnOfNumberThisValueConflictsWith]+ " with " +solution);
 
+        sodokuUIManager.setPanelColor(Color.RED, rowOfNumberThisValueConflictsWith, columnOfNumberThisValueConflictsWith);
+
+      }
 
     }
 
@@ -187,6 +197,7 @@ class SodukuValidator {
     else {
 
       System.out.println("The grid was a valid sodoku grid!");
+      sodokuUIManager.setResultsText("The grid was a valid sodoku grid!");
 
     }
 
@@ -367,6 +378,51 @@ class SodukuValidator {
       sodokuUIManager.setVisible(true);
 
     }
+
+  }
+
+
+  public void showProcessTakenToArriveAtResults() {
+
+    System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+    sodokuUIManager.setWorkText("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+
+    for (int rowNumber = 0; rowNumber < 9; rowNumber++) {
+
+      //highlight this row as dark green to see signal it is being checked:
+      System.out.println("1a.) Checking row "+rowNumber);
+      sodokuUIManager.setEntireRowOfPanelsToColor(Color.YELLOW, rowNumber);
+
+      try {
+
+        Thread.sleep(1000);
+
+      }
+      catch (Exception e) {
+      }
+
+      for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+        if (rowNumber == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) {
+
+          //highlight the potential errors in this row as red:
+          try  {
+
+            Thread.sleep(500);
+
+          } catch (Exception e) {
+
+          }
+
+          sodokuUIManager.setPanelColor(Color.RED, rowNumber, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+          sodokuUIManager.setWorkText("   Duplicate value of "+sodukuGrid[rowNumber][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+rowNumber+" , column: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+
+        }
+
+      }
+
+    }
+
 
   }
 

@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
@@ -24,13 +26,32 @@ class SodokuUIManager extends JFrame implements ActionListener {
     private JPanel panelThatContainsTheSodokuGridPanelsAndLabels;
 
     private JPanel panelWithResults;
-    private JLabel resultsLabel;
+    private JTextArea resultsText;
+    private JScrollPane resultsTextScrollPane;
 
-    private JLabel workText;
+    private JTextArea workText;
     private JButton showWorkButton;
     private JPanel workPanel;
+    private JScrollPane workScrollPane;
     //showWorkButton.setBackground(Color.LIGHT_GRAY);
 
+    public void setPanelColor(Color color, int row, int column) {
+
+      thePanelsOnTheSodokuGrid[row][column].setBackground(color);
+
+    }
+
+    public void setResultsText(String message) {
+
+      resultsText.append(message + '\n');
+
+    }
+
+    public void setWorkText(String message) {
+
+      workText.append(message + '\n');
+
+    }
 
     public SodokuUIManager(int[][] theSodokuGridToRepresent) {
 
@@ -75,10 +96,17 @@ class SodokuUIManager extends JFrame implements ActionListener {
       panelWithResults = new JPanel();
       panelWithResults.setBackground(Color.GRAY);
       panelWithResults.setLayout(new BorderLayout());
-      resultsLabel = new JLabel("FINAL RESULTS WILL SHOW HERE...");
-      resultsLabel.setFont(new Font("Arial", Font.BOLD, 15));
-      panelWithResults.add(resultsLabel, BorderLayout.CENTER);
 
+      resultsText = new JTextArea(4, 20);
+      resultsText.setText("Results: " + '\n');
+      resultsText.setFont(new Font("Arial", Font.BOLD, 15));
+      resultsText.setBackground(Color.WHITE);
+
+      resultsTextScrollPane = new JScrollPane(resultsText);
+      resultsTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+      resultsTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+      panelWithResults.add(resultsTextScrollPane, BorderLayout.CENTER);
 
       workPanel = new JPanel();
       workPanel.setBackground(Color.WHITE);
@@ -90,9 +118,18 @@ class SodokuUIManager extends JFrame implements ActionListener {
       showWorkButton.addActionListener(this);
       workPanel.add(showWorkButton, BorderLayout.NORTH);
 
-      workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
-      workText.setFont(new Font("Arial", Font.BOLD, 30));
-      workPanel.add(workText, BorderLayout.CENTER);
+      //workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
+      //workText.setFont(new Font("Arial", Font.BOLD, 30));
+      workText = new JTextArea(10, 20);
+      workText.setText("STEPS TAKEN TO GET RESULTS WILL SHOW HERE: " + '\n');
+      workText.setFont(new Font("Arial", Font.BOLD, 12));
+      workText.setBackground(Color.WHITE);
+
+      workScrollPane = new JScrollPane(workText);
+      workScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+      workScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+      workPanel.add(workScrollPane, BorderLayout.CENTER);
 
       //Add the GUI sodoku grid and GUI results to the frame:
       add(panelThatContainsTheSodokuGridPanelsAndLabels, BorderLayout.CENTER);
@@ -101,6 +138,98 @@ class SodokuUIManager extends JFrame implements ActionListener {
 
       pack();
       setSize(windowWidth, windowHeight);
+
+    }
+
+    public void setEntireRowOfPanelsToColor(Color color, int rowNum) {
+
+      for (int column = 0; column < 9; column++) {
+
+        thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
+
+      }
+
+    }
+
+    public void setEntireColumnOfPanelsToColor(Color color, int columnNum) {
+
+      for (int row = 0; row < 9; row++) {
+
+        thePanelsOnTheSodokuGrid[row][columnNum].setBackground(color);
+
+      }
+
+    }
+
+    public void setEntireGridOfPanelsToColor(Color color, int gridNum) {
+
+      int startingRowNum = 0;
+      int startingColumnNum = 0;
+
+      if (gridNum == 0) {
+
+        startingRowNum = 0;
+        startingColumnNum = 0;
+
+      }
+      else if (gridNum == 1) {
+
+        startingRowNum = 0;
+        startingColumnNum = 3;
+
+      }
+      else if (gridNum == 2) {
+
+        startingRowNum = 0;
+        startingColumnNum = 6;
+
+      }
+      else if (gridNum == 3) {
+
+        startingRowNum = 1;
+        startingColumnNum = 0;
+
+      }
+      else if (gridNum == 4) {
+
+        startingRowNum = 1;
+        startingColumnNum = 3;
+
+      }
+      else if (gridNum == 5) {
+
+        startingRowNum = 1;
+        startingColumnNum = 6;
+
+      }
+      else if (gridNum == 6) {
+
+        startingRowNum = 2;
+        startingColumnNum = 0;
+
+      }
+      else if (gridNum == 7) {
+
+        startingRowNum = 2;
+        startingColumnNum = 3;
+
+      }
+      else if (gridNum == 8) {
+
+        startingRowNum = 2;
+        startingColumnNum = 6;
+
+      }
+
+      for (int row = startingRowNum; (row - startingRowNum) < 3; row++) {
+
+        for (int column = startingColumnNum; (column - startingColumnNum) < 3; column++) {
+
+          thePanelsOnTheSodokuGrid[row][column].setBackground(color);
+
+        }
+
+      }
 
     }
 
