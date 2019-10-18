@@ -59,6 +59,13 @@ class SodokuUIManager extends JFrame {
 
     }
 
+    public Color getPanelColorOnGrid(int row, int column) {
+
+      return thePanelsOnTheSodokuGrid[row][column].getBackground();
+
+
+    }
+
     public SodokuUIManager(int[][] theSodokuGridToRepresent) {
 
       super("Sodoku Validator");
@@ -119,7 +126,7 @@ class SodokuUIManager extends JFrame {
       workPanel.setLayout(new BorderLayout());
 
       //Create the button the user can click to see the process taken to get to this final result:
-      showWorkButton = new JButton("Show work");
+      showWorkButton = new JButton("Step through");
       showWorkButton.setBackground(Color.LIGHT_GRAY);
       //showWorkButton.addActionListener(actionListener);
       workPanel.add(showWorkButton, BorderLayout.NORTH);
@@ -153,7 +160,7 @@ class SodokuUIManager extends JFrame {
 
         if (colorToLeaveAlone != null) {
 
-          if (colorToLeaveAlone != color) {
+          if (thePanelsOnTheSodokuGrid[rowNum][column].getBackground() != colorToLeaveAlone) {
 
             thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
 
@@ -177,7 +184,7 @@ class SodokuUIManager extends JFrame {
 
         if (colorToLeaveAlone != null) {
 
-          if (colorToLeaveAlone != color) {
+          if (thePanelsOnTheSodokuGrid[row][columnNum].getBackground() != colorToLeaveAlone) {
 
             thePanelsOnTheSodokuGrid[row][columnNum].setBackground(color);
 

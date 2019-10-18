@@ -25,6 +25,11 @@ class SodukuValidator implements ActionListener {
   Scanner reader;
   boolean programShouldEndSinceUserDidNotGiveAFileToReadFrom;
   boolean waitForTimerToExpire;
+  private boolean steppingThroughRows;
+  private boolean steppingThroughColumns;
+  private boolean steppingThroughGrids;
+  private int currentRowInStepThrough;
+  private int currentColumnInStepThrough;
 
   public ArrayList<ErrorAndSuggestionContainer> getListOfErrorsAndSuggestionsThatHaveBeenDetected() {
 
@@ -287,6 +292,13 @@ class SodukuValidator implements ActionListener {
 
   public SodukuValidator() {
 
+    steppingThroughRows = true;
+    steppingThroughColumns = false;
+    steppingThroughGrids = false;
+
+    currentRowInStepThrough = 0;
+    currentColumnInStepThrough = 0;
+
     waitForTimerToExpire = false;
 
     sodukuGrid = new int[9][9];
@@ -390,17 +402,158 @@ class SodukuValidator implements ActionListener {
 
   }
 
-  public void showProcessTakenToArriveAtResults() {
+  public void takeAStep() {
 
-    System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
-    sodokuUIManager.setWorkText("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
-    Task task = null;
-    Timer timer;
+    //System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
+    //sodokuUIManager.setWorkText("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+    if (steppingThroughRows) {
+
+      if ((currentRowInStepThrough == 0) && (currentColumnInStepThrough == 0)) {
+
+        //just starting the step through the rows:
+        System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
+        sodokuUIManager.setWorkText("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+
+      }
+
+
+      if (sodokuUIManager.getPanelColorOnGrid(currentRowInStepThrough, currentColumnInStepThrough)!= Color.RED) {
+
+        sodokuUIManager.setPanelColor(Color.YELLOW, currentRowInStepThrough, currentColumnInStepThrough);
+
+      }
+
+      boolean errorDetected = false;
+
+      for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+        if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) && (currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith())) {
+
+          //highlight the potential errors in this row as red:
+          sodokuUIManager.setPanelColor(Color.RED, currentRowInStepThrough, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+          sodokuUIManager.setWorkText("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+currentRowInStepThrough + 1+" , column: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1);
+
+          errorDetected = true;
+          sodokuUIManager.setWorkText("             Potential Error conflicts with value at row " +listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith() + 1+" column "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith() + 1+ " which has also been marked as red for later");
+          sodokuUIManager.setPanelColor(Color.RED, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith(), listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith());
+
+          break;
+
+        }
+
+      }
+
+      if (errorDetected == false) {
+
+        System.out.println("       No potential errors detected at row"+currentRowInStepThrough + 1+" column "+currentColumnInStepThrough + 1);
+        sodokuUIManager.setWorkText("       No potential errors detected at row"+currentRowInStepThrough + 1+" column "+currentColumnInStepThrough + 1);
+
+      }
+
+      currentColumnInStepThrough++;
+
+      if (currentColumnInStepThrough >= 9) {
+
+        currentColumnInStepThrough = 0;
+        currentRowInStepThrough++;
+        sodokuUIManager.setEntireRowOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, currentRowInStepThrough - 1);
+
+        if (currentRowInStepThrough >= 9) {
+
+            //Already checked all rows, now it is time to check all columns:
+            currentRowInStepThrough = 0;
+            currentColumnInStepThrough = 0;
+
+            steppingThroughRows = false;
+            steppingThroughColumns = true;
+
+        }
+      }
+
+    }
+    else if (steppingThroughColumns) {
+
+      if ((currentRowInStepThrough == 0) && (currentColumnInStepThrough == 0)) {
+
+        //just starting the step through the rows:
+        System.out.println("1.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
+        sodokuUIManager.setWorkText("1.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
+
+      }
+
+      if (sodokuUIManager.getPanelColorOnGrid(currentRowInStepThrough, currentColumnInStepThrough) != Color.RED) {
+
+        sodokuUIManager.setPanelColor(Color.YELLOW, currentRowInStepThrough, currentColumnInStepThrough);
+
+      }
+
+      boolean errorDetected = false;
+
+      for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+        if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith())) {
+
+          //highlight the potential errors in this row as red:
+          sodokuUIManager.setPanelColor(Color.RED, currentRowInStepThrough, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+          sodokuUIManager.setWorkText("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+currentRowInStepThrough + 1+" , column: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1);
+
+          errorDetected = true;
+          sodokuUIManager.setWorkText("             Potential Error conflicts with value at row " +listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith() + 1+" column "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith() + 1+ " which has also been marked as red for later");
+          sodokuUIManager.setPanelColor(Color.RED, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith(), listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith());
+
+          break;
+
+        }
+
+      }
+
+      if (errorDetected == false) {
+
+        System.out.println("       No potential errors detected at row"+currentRowInStepThrough + 1+" column "+currentColumnInStepThrough + 1);
+        sodokuUIManager.setWorkText("       No potential errors detected at row"+currentRowInStepThrough + 1+" column "+currentColumnInStepThrough + 1);
+
+      }
+
+      currentRowInStepThrough++;
+
+      if (currentRowInStepThrough >= 9) {
+
+        //Move to next column
+        currentRowInStepThrough = 0;
+        currentColumnInStepThrough++;
+        sodokuUIManager.setEntireColumnOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, currentColumnInStepThrough - 1);
+
+        if (currentColumnInStepThrough >= 9) {
+
+            //Already checked all columns, now it is time to check all grids:
+            currentRowInStepThrough = 0;
+            currentColumnInStepThrough = 0;
+
+            steppingThroughRows = false;
+            steppingThroughColumns = false;
+            steppingThroughGrids = true;
+
+        }
+      }
+
+    }
+    else if (steppingThroughGrids) {
+
+
+
+    }
+    else {
+
+
+
+    }
+    //Task task = null;
+    //Timer timer;
     //TimerTask timerTask;
 
-    int rowNumber = 0;
-    int column = 0;
-    int grid = 0;
+    //int rowNumber = 0;
+    //int column = 0;
+    //int grid = 0;
 
 
 
@@ -584,7 +737,7 @@ class SodukuValidator implements ActionListener {
   public void actionPerformed(ActionEvent e) {
 
     //do button action here...
-    showProcessTakenToArriveAtResults();
+    takeAStep();
     //System.exit(0);
 
   }

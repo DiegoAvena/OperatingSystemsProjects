@@ -45,31 +45,31 @@ class ErrorAndSuggestionContainer {
 
   }
 
-  int getRowOfNumberThisValueConflictsWith() {
+  public int getRowOfNumberThisValueConflictsWith() {
 
     return rowOfNumberThisValueConflictsWith;
 
   }
 
-  int getColumnOfNumberThisValueConflictsWith() {
+  public int getColumnOfNumberThisValueConflictsWith() {
 
     return columnOfNumberThisValueConflictsWith;
 
   }
-  
-  int getRowOfError() {
+
+  public int getRowOfError() {
 
     return rowOfError;
 
   }
 
-  int getColumnOfError() {
+  public int getColumnOfError() {
 
     return columnOfError;
 
   }
 
-  String getSuggestion() {
+  public String getSuggestion() {
 
     return suggestion;
 
