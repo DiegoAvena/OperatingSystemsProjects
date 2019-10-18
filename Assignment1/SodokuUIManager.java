@@ -15,7 +15,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-class SodokuUIManager extends JFrame implements ActionListener {
+class SodokuUIManager extends JFrame {
 
     private int windowWidth; //the width of the UI window
     private int windowHeight; //the height of the UI window
@@ -50,6 +50,12 @@ class SodokuUIManager extends JFrame implements ActionListener {
     public void setWorkText(String message) {
 
       workText.append(message + '\n');
+
+    }
+
+    public JButton GetShowWorkButton() {
+
+      return showWorkButton;
 
     }
 
@@ -115,7 +121,7 @@ class SodokuUIManager extends JFrame implements ActionListener {
       //Create the button the user can click to see the process taken to get to this final result:
       showWorkButton = new JButton("Show work");
       showWorkButton.setBackground(Color.LIGHT_GRAY);
-      showWorkButton.addActionListener(this);
+      //showWorkButton.addActionListener(actionListener);
       workPanel.add(showWorkButton, BorderLayout.NORTH);
 
       //workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
@@ -141,21 +147,48 @@ class SodokuUIManager extends JFrame implements ActionListener {
 
     }
 
-    public void setEntireRowOfPanelsToColor(Color color, int rowNum) {
+    public void setEntireRowOfPanelsToColor(Color color, Color colorToLeaveAlone, int rowNum) {
 
       for (int column = 0; column < 9; column++) {
 
-        thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
+        if (colorToLeaveAlone != null) {
+
+          if (colorToLeaveAlone != color) {
+
+            thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
+
+          }
+
+        }
+        else {
+
+          thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
+
+        }
+        //thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
 
       }
 
     }
 
-    public void setEntireColumnOfPanelsToColor(Color color, int columnNum) {
+    public void setEntireColumnOfPanelsToColor(Color color, Color colorToLeaveAlone, int columnNum) {
 
       for (int row = 0; row < 9; row++) {
 
-        thePanelsOnTheSodokuGrid[row][columnNum].setBackground(color);
+        if (colorToLeaveAlone != null) {
+
+          if (colorToLeaveAlone != color) {
+
+            thePanelsOnTheSodokuGrid[row][columnNum].setBackground(color);
+
+          }
+
+        }
+        else {
+
+          thePanelsOnTheSodokuGrid[row][columnNum].setBackground(color);
+
+        }
 
       }
 
@@ -230,13 +263,6 @@ class SodokuUIManager extends JFrame implements ActionListener {
         }
 
       }
-
-    }
-
-    public void actionPerformed(ActionEvent e) {
-
-      //do button action here...
-      System.exit(0);
 
     }
 

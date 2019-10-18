@@ -3,10 +3,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import javax.swing.Timer;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 import java.awt.Color;
 
 //Base class for soduke validator
-class SodukuValidator {
+class SodukuValidator implements ActionListener {
 
   protected SodokuUIManager sodokuUIManager;
 
@@ -19,6 +24,7 @@ class SodukuValidator {
 
   Scanner reader;
   boolean programShouldEndSinceUserDidNotGiveAFileToReadFrom;
+  boolean waitForTimerToExpire;
 
   public ArrayList<ErrorAndSuggestionContainer> getListOfErrorsAndSuggestionsThatHaveBeenDetected() {
 
@@ -281,6 +287,8 @@ class SodukuValidator {
 
   public SodukuValidator() {
 
+    waitForTimerToExpire = false;
+
     sodukuGrid = new int[9][9];
     listOfErrorsAndSuggestionsThatHaveBeenDetected = new ArrayList<ErrorAndSuggestionContainer>();
     /*
@@ -376,53 +384,127 @@ class SodukuValidator {
 
       sodokuUIManager = new SodokuUIManager(sodukuGrid);
       sodokuUIManager.setVisible(true);
+      sodokuUIManager.GetShowWorkButton().addActionListener(this);
 
     }
 
   }
 
-
   public void showProcessTakenToArriveAtResults() {
 
-    System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+    System.out.println("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...");
     sodokuUIManager.setWorkText("1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...");
+    Task task = null;
+    Timer timer;
+    //TimerTask timerTask;
 
-    for (int rowNumber = 0; rowNumber < 9; rowNumber++) {
+    int rowNumber = 0;
+    int column = 0;
+    int grid = 0;
 
-      //highlight this row as dark green to see signal it is being checked:
-      System.out.println("1a.) Checking row "+rowNumber);
-      sodokuUIManager.setEntireRowOfPanelsToColor(Color.YELLOW, rowNumber);
 
-      try {
 
-        Thread.sleep(1000);
+    /*timer = new Timer(1000, new ActionListener() {
 
-      }
-      catch (Exception e) {
-      }
+      int rowNumber = 0;
 
-      for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+      public void actionPerformed(ActionEvent e) {
 
-        if (rowNumber == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) {
+        if (rowNumber < 9) {
 
-          //highlight the potential errors in this row as red:
-          try  {
+          sodokuUIManager.setEntireRowOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, rowNumber);
+          System.out.println("1a.) Checking row "+rowNumber);
+          sodokuUIManager.setWorkText("   1a.) Checking row" + rowNumber);
+          sodokuUIManager.setEntireRowOfPanelsToColor(Color.YELLOW, null, rowNumber);
 
-            Thread.sleep(500);
+          rowNumber++;
 
-          } catch (Exception e) {
+        }
+        else {
 
-          }
-
-          sodokuUIManager.setPanelColor(Color.RED, rowNumber, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
-          sodokuUIManager.setWorkText("   Duplicate value of "+sodukuGrid[rowNumber][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+rowNumber+" , column: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+          ((Timer)e.getSource()).stop();
 
         }
 
       }
 
-    }
+    });
 
+    timer.start(); */
+
+    /*for (int rowNumber = 0; rowNumber < 9; rowNumber++) {
+
+      task = new Task();
+      timer = new Timer(1000, task);
+      timer.setRepeats(false);
+      //timerTask = task;
+      //timer.schedule(task, 1000);
+      timer.start();
+
+      //highlight this row as dark green to see signal it is being checked:
+      System.out.println("1a.) Checking row "+rowNumber);
+      sodokuUIManager.setWorkText("   1a.) Checking row" + rowNumber);
+      sodokuUIManager.setEntireRowOfPanelsToColor(Color.YELLOW, null, rowNumber);
+
+      while (true) {
+
+        //System.out.println("Timer is on? "+ timer.isRunning());
+        if (timer.isRunning() == false) {
+
+          for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+            if (rowNumber == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) {
+
+              //highlight the potential errors in this row as red:
+              sodokuUIManager.setPanelColor(Color.RED, rowNumber, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+              sodokuUIManager.setWorkText("       Duplicate value of "+sodukuGrid[rowNumber][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+rowNumber+" , column: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
+
+              sodokuUIManager.setPanelColor(Color.RED, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith(), listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith());
+
+            }
+
+          }
+
+          //task.setTimerExpired(false);
+          //sodokuUIManager.setEntireRowOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, rowNumber);
+          waitForTimerToExpire = true;
+          break;
+
+        }
+        //System.out.println("Wait for timer?: "+waitForTimerToExpire);
+
+        sodokuUIManager.setEntireRowOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, rowNumber);
+
+      }
+
+    } */
+
+    /*sodokuUIManager.setWorkText("2.) Go through every column to see what the columns are missing, and determine the potential values (marked in red, these are duplicates) that can be taken out to fit in these missing values...");
+
+    for (int column = 0; column < 9; column++) {
+
+      //highlight this column as yellow to see signal it is being checked:
+      System.out.println("2a.) Checking column "+column);
+      sodokuUIManager.setWorkText("   2a.) Checking column" + column);
+      sodokuUIManager.setEntireColumnOfPanelsToColor(Color.YELLOW, null, column);
+
+      for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+        if (column == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) {
+
+          //highlight the potential errors in this row as red:
+          sodokuUIManager.setPanelColor(Color.RED, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError(), column);
+          sodokuUIManager.setWorkText("       Duplicate value of "+sodukuGrid[listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()][column]+" at row: "+listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()+" , column: "+column);
+
+          sodokuUIManager.setPanelColor(Color.RED, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith(), listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith());
+
+        }
+
+      }
+
+      sodokuUIManager.setEntireColumnOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, column);
+
+    } */
 
   }
 
@@ -496,6 +578,14 @@ class SodukuValidator {
     }
 
 
+
+  }
+
+  public void actionPerformed(ActionEvent e) {
+
+    //do button action here...
+    showProcessTakenToArriveAtResults();
+    //System.exit(0);
 
   }
 
