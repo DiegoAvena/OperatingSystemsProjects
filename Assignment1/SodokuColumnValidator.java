@@ -7,13 +7,11 @@ class SodokuColumnValidator extends SodukuValidator implements Runnable {
 
   void ValidateColumns() {
 
-    //System.out.println("Starting column check at column: "+columnToStartValidationAt);
     for (int column = columnToStartValidationAt; column < (columnToStartValidationAt + numberOfColumnsToValidate); column++) {
 
       //check the ith column:
       for (int row = 0; row < 9; row++) {
 
-        //System.out.println("Checking column: "+(column + 1) + "row: "+(row + 1));
         if (arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1] == null) {
 
           //This value has not yet appeared in this column, so no error to report, store its location in the grid:
@@ -32,15 +30,8 @@ class SodokuColumnValidator extends SodukuValidator implements Runnable {
             set once I am done since I need to know what values are missing in order to suggest them as solutions
 
           */
-          //Prevent adding of duplicates:
           ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInColumnsBeingChecked[column][sodukuGrid[row][column] - 1][1], "");
           listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
-
-          /*if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
-
-            listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
-
-          } */
 
         }
 

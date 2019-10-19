@@ -127,7 +127,6 @@ class SodukuValidator implements ActionListener {
     else {
 
       int solution = determineSolutionForCell(rowOfNumberThisValueConflictsWith, columnOfNumberThisValueConflictsWith);
-      //errorContainer.setConflictingValueWasDeterminedToBeTheActualError(true);
 
       /*
 
@@ -249,22 +248,9 @@ class SodukuValidator implements ActionListener {
 
       for (int i = 0; i < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); i++) {
 
-
-        /*int errorRow = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getRowOfError();
-        int errorColumn = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getColumnOfError();
-
-        int rowOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getRowOfNumberThisValueConflictsWith();
-        int columnOfNumberThisValueConflictsWith = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(i).getColumnOfNumberThisValueConflictsWith();
-
-        int gridErrorWasIn = determineGrid(errorRow, errorColumn);
-
-        System.out.println("There was an at row "+(errorRow + 1)+" column "+(errorColumn + 1) + ", this conflicts with the number at row: "+ (rowOfNumberThisValueConflictsWith + 1) + " column: "+(columnOfNumberThisValueConflictsWith + 1));
-        */
         makeSuggestion(i);
 
       }
-
-      //removeDuplicateErrorContainers();
 
     }
     else {
@@ -352,16 +338,6 @@ class SodukuValidator implements ActionListener {
   }
 
   public SodukuValidator() {
-
-    /*steppingThroughRows = true;
-    steppingThroughColumns = false;
-    steppingThroughGrids = false;
-    stepThroughJustStarted = true;
-
-    currentRowInStepThrough = 0;
-    currentColumnInStepThrough = 0;
-    currentGridInStepThrough = 0;
-    currentErrorInStepThrough = 0; */
 
     waitForTimerToExpire = false;
 

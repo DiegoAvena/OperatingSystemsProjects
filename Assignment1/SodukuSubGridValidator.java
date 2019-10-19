@@ -51,7 +51,6 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
           if (arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] == null) {
 
-            //System.out.println("Checking grid, "+" Column: "+(column + 1) + "row: "+(row + 1));
             //this value is not yet in this grid, so no error, but now signal that it is in this grid:
             arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1] = new int[2];
             arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0] = row;
@@ -71,15 +70,8 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
             */
 
-            //Prevent adding of duplicates:
             ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1], currentGridNumber,"");
             listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
-
-            /*if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
-
-              listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
-
-            } */
 
           }
 

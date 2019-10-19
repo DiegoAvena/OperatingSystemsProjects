@@ -33,7 +33,6 @@ class SodokuUIManager extends JFrame {
     private JButton showWorkButton;
     private JPanel workPanel;
     private JScrollPane workScrollPane;
-    //showWorkButton.setBackground(Color.LIGHT_GRAY);
 
     public void setPanelColor(Color color, int row, int column) {
 
@@ -184,7 +183,7 @@ class SodokuUIManager extends JFrame {
       resultsText.setFont(new Font("Arial", Font.BOLD, 15));
       resultsText.setBackground(Color.WHITE);
       resultsText.setEditable(false);
-      
+
       resultsTextScrollPane = new JScrollPane(resultsText);
       resultsTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
       resultsTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -200,8 +199,6 @@ class SodokuUIManager extends JFrame {
       showWorkButton.setBackground(Color.LIGHT_GRAY);
       workPanel.add(showWorkButton, BorderLayout.NORTH);
 
-      //workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
-      //workText.setFont(new Font("Arial", Font.BOLD, 30));
       workText = new JTextArea(10, 80);
       workText.setText("STEPS TAKEN TO GET RESULTS WILL SHOW HERE: " + '\n');
       workText.setFont(new Font("Arial", Font.BOLD, 12));
@@ -242,7 +239,6 @@ class SodokuUIManager extends JFrame {
           thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
 
         }
-        //thePanelsOnTheSodokuGrid[rowNum][column].setBackground(color);
 
       }
 
