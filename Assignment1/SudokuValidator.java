@@ -19,6 +19,7 @@ class SodukuValidator implements ActionListener {
   protected int[][][] arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked; //Each inner array is a collection of the values found for the row, column, or sub grid, indicated by true if found or false if not found
 
   protected ArrayList<ErrorAndSuggestionContainer> listOfErrorsAndSuggestionsThatHaveBeenDetected;
+  protected ArrayList<int[]> listOfConfirmedErrorLocations;
 
   private SodokuFeedbackManager sodokuFeedBackManager;
 
@@ -116,10 +117,17 @@ class SodukuValidator implements ActionListener {
       errorContainer.setSuggestedValue(solution);
       errorContainer.setPotentialErrorWasDeterminedToBeTheActualError(true);
 
+      int[] rowColumnPair = new int[2];
+      rowColumnPair[0] = errorRow;
+      rowColumnPair[1] = errorColumn;
+
+      listOfConfirmedErrorLocations.add(rowColumnPair);
+
     }
     else {
 
       int solution = determineSolutionForCell(rowOfNumberThisValueConflictsWith, columnOfNumberThisValueConflictsWith);
+      //errorContainer.setConflictingValueWasDeterminedToBeTheActualError(true);
 
       /*
 
@@ -134,6 +142,12 @@ class SodukuValidator implements ActionListener {
         errorContainer.setConflictingValueWasDeterminedToBeTheActualError(true);
         errorContainer.setSuggestedValue(solution);
 
+        int[] rowColumnPair = new int[2];
+        rowColumnPair[0] = rowOfNumberThisValueConflictsWith;
+        rowColumnPair[1] = columnOfNumberThisValueConflictsWith;
+
+        listOfConfirmedErrorLocations.add(rowColumnPair);
+
         //the error must be the value the assumed error conflicts with, so a suggestion should be made for this one instead:
         System.out.println("There was an error at row "+(rowOfNumberThisValueConflictsWith + 1)+" column "+(columnOfNumberThisValueConflictsWith + 1));
         System.out.println("Solution: Replace "+sodukuGrid[rowOfNumberThisValueConflictsWith][columnOfNumberThisValueConflictsWith]+ " with " +solution);
@@ -142,6 +156,25 @@ class SodukuValidator implements ActionListener {
         sodokuUIManager.setResultsText("    Solution: Replace "+sodukuGrid[rowOfNumberThisValueConflictsWith][columnOfNumberThisValueConflictsWith]+ " with " +solution);
 
         sodokuUIManager.setPanelColor(Color.RED, rowOfNumberThisValueConflictsWith, columnOfNumberThisValueConflictsWith);
+
+      }
+      else {
+
+
+        for (int i = 0; i < listOfConfirmedErrorLocations.size(); i++) {
+
+          if ((listOfConfirmedErrorLocations.get(i)[0] == rowOfNumberThisValueConflictsWith) && (listOfConfirmedErrorLocations.get(i)[1] == columnOfNumberThisValueConflictsWith)) {
+
+            //there was no solution because a solution has already been given for this value, so it is an actual error; thus, the conflicted value is the actual error:
+            errorContainer.setConflictingValueWasDeterminedToBeTheActualError(true);
+            return;
+
+          }
+
+        }
+
+        //if this part is reached, then the conflicted value is actually not an error, it must be the potential error, which already was given a solution, so just signal this:
+        errorContainer.setPotentialErrorWasDeterminedToBeTheActualError(true);
 
       }
 
@@ -187,7 +220,30 @@ class SodukuValidator implements ActionListener {
 
   }
 
+  private void removeDuplicateErrorContainers() {
+
+    ArrayList<Integer> indecesToRemoveFromList = new ArrayList<Integer>();
+    for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
+
+      if (listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getSuggestedValue() == 0) {
+
+        indecesToRemoveFromList.add(errorNumber);
+
+      }
+
+    }
+
+    for (int i = 0; i < indecesToRemoveFromList.size(); i++) {
+
+      listOfErrorsAndSuggestionsThatHaveBeenDetected.remove(indecesToRemoveFromList.get(i));
+
+    }
+
+  }
+
   public void getResults() {
+
+    listOfConfirmedErrorLocations = new ArrayList<int[]>();
 
     if (listOfErrorsAndSuggestionsThatHaveBeenDetected.size() != 0) {
 
@@ -207,6 +263,8 @@ class SodukuValidator implements ActionListener {
         makeSuggestion(i);
 
       }
+
+      //removeDuplicateErrorContainers();
 
     }
     else {
@@ -293,7 +351,6 @@ class SodukuValidator implements ActionListener {
 
   }
 
-
   public SodukuValidator() {
 
     /*steppingThroughRows = true;
@@ -370,7 +427,7 @@ class SodukuValidator implements ActionListener {
   }
 
   //initializes the grid, returns true if the grid was successfully intialized:
-  public void setSodukuGrid(String nameOfFileToBaseGridOffOf) {
+  public void setSodukuGridBasedOnFile(String nameOfFileToBaseGridOffOf) {
 
     tryToOpenFile(nameOfFileToBaseGridOffOf);
 

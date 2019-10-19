@@ -183,7 +183,8 @@ class SodokuUIManager extends JFrame {
       resultsText.setText("Results: " + '\n');
       resultsText.setFont(new Font("Arial", Font.BOLD, 15));
       resultsText.setBackground(Color.WHITE);
-
+      resultsText.setEditable(false);
+      
       resultsTextScrollPane = new JScrollPane(resultsText);
       resultsTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
       resultsTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -197,15 +198,15 @@ class SodokuUIManager extends JFrame {
       //Create the button the user can click to see the process taken to get to this final result:
       showWorkButton = new JButton("Step through");
       showWorkButton.setBackground(Color.LIGHT_GRAY);
-      //showWorkButton.addActionListener(actionListener);
       workPanel.add(showWorkButton, BorderLayout.NORTH);
 
       //workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
       //workText.setFont(new Font("Arial", Font.BOLD, 30));
-      workText = new JTextArea(10, 50);
+      workText = new JTextArea(10, 80);
       workText.setText("STEPS TAKEN TO GET RESULTS WILL SHOW HERE: " + '\n');
       workText.setFont(new Font("Arial", Font.BOLD, 12));
       workText.setBackground(Color.WHITE);
+      workText.setEditable(false); //prevents user from being able to type in this area
 
       workScrollPane = new JScrollPane(workText);
       workScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

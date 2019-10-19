@@ -57,13 +57,13 @@ class SodokuRowValidator extends SodukuValidator implements Runnable {
           */
           //Prevent adding of duplicates:
           ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInRowsBeingChecked[row][sodukuGrid[row][column] - 1][1], "");
-          //listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
+          listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
 
-          if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
+          /*if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
             listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
 
-          } 
+          } */
 
         }
 

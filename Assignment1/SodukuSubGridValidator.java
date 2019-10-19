@@ -62,7 +62,7 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
 
             //this value has already appeared in this column, this is an error, store the location:
 
-            System.out.println("Error in grid detected, particularly at row:  "+row+" column"+column);
+            System.out.println("Error in grid detected, particularly at row:  "+row+" column"+column+" , which conflicts with value at row: "+arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0]+" column: "+arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1]);
 
             /*
 
@@ -72,14 +72,14 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
             */
 
             //Prevent adding of duplicates:
-            ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1], "");
-            //listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
+            ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1], currentGridNumber,"");
+            listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
 
-            if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
+            /*if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
               listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
 
-            } 
+            } */
 
           }
 

@@ -8,6 +8,7 @@ class ErrorAndSuggestionContainer {
 
   int rowOfError;
   int columnOfError;
+  int gridOfError;
 
   int rowOfNumberThisValueConflictsWith;
   int columnOfNumberThisValueConflictsWith;
@@ -27,6 +28,21 @@ class ErrorAndSuggestionContainer {
     this.columnOfError = columnOfError;
     this.rowOfNumberThisValueConflictsWith = rowOfNumberThisValueConflictsWith;
     this.columnOfNumberThisValueConflictsWith = columnOfNumberThisValueConflictsWith;
+    gridOfError = -1;
+
+  }
+
+  ErrorAndSuggestionContainer(int rowOfError, int columnOfError, int rowOfNumberThisValueConflictsWith, int columnOfNumberThisValueConflictsWith, int gridOfError, String suggestion) {
+
+    potentialErrorWasDeterminedToBeTheActualError = false;
+    conflictingValueWasDeterminedToBeTheActualError = false;
+    suggestedValue = 0;
+
+    this.rowOfError = rowOfError;
+    this.columnOfError = columnOfError;
+    this.rowOfNumberThisValueConflictsWith = rowOfNumberThisValueConflictsWith;
+    this.columnOfNumberThisValueConflictsWith = columnOfNumberThisValueConflictsWith;
+    this.gridOfError = gridOfError;
 
   }
 
@@ -42,6 +58,12 @@ class ErrorAndSuggestionContainer {
 
   }
 
+  public int getErrorGridNumber() {
+
+    return gridOfError;
+
+  }
+  
   @Override public boolean equals(Object otherObject) {
 
     if (otherObject == null) {

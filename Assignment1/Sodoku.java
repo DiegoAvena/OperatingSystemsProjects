@@ -4,7 +4,7 @@ class Sodoku {
 
     Thread[] threadsRunning = new Thread[9];
     SodukuValidator masterValidator = new SodukuValidator();
-    masterValidator.setSodukuGrid("");
+    masterValidator.setSodukuGridBasedOnFile(null);
 
     if (masterValidator.getProgramShouldEndSinceUserDidNotGiveAFileToReadFrom() == false) {
 

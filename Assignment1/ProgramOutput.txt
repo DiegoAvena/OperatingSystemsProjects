@@ -1,0 +1,514 @@
+---------------------------------------------------------------------------------
+test1.txt results:
+
+The final answer:
+
+There was an error at row 1 column 8
+    Solution: Replace 7 with 8
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+       POTENTIAL ERROR: Duplicate value of 7 at row: 1 , column: 9
+             Potential Error conflicts with value at row 1 column 8 which has also been marked as red for later
+  Checking row: 2
+  Checking row: 3
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+  Checking column: 7
+  Checking column: 8
+       POTENTIAL ERROR: Duplicate value of 7 at row: 8 , column: 8
+             Potential Error conflicts with value at row 1 column 8 which has also been marked as red for later
+  Checking column: 9
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+  Checking grid: 2
+  Checking grid: 3
+       POTENTIAL ERROR: Duplicate value of 7 at row: 1 , column: 9
+             Potential Error conflicts with value at row 1 column 8 which has also been marked as red for later
+  Checking grid: 4
+  Checking grid: 5
+  Checking grid: 6
+  Checking grid: 7
+  Checking grid: 8
+  Checking grid: 9
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 8, column 8
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 1, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 1 column 8
+        RESULTS: Solution: Replace 7 with 8
+
+     Check the row, column, and grid of the potential error at row 1, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 1, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.
+
+     Check the row, column, and grid of the potential error at row 1, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 1, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+test2.txt results
+
+The final answer:
+
+There was an error at row 2 column 8
+    Solution: Replace 4 with 5
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+  Checking row: 2
+       POTENTIAL ERROR: Duplicate value of 4 at row: 2 , column: 8
+             Potential Error conflicts with value at row 2 column 7 which has also been marked as red for later
+  Checking row: 3
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+  Checking column: 7
+  Checking column: 8
+       POTENTIAL ERROR: Duplicate value of 4 at row: 6 , column: 8
+             Potential Error conflicts with value at row 2 column 8 which has also been marked as red for later
+  Checking column: 9
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+  Checking grid: 2
+  Checking grid: 3
+       POTENTIAL ERROR: Duplicate value of 4 at row: 2 , column: 8
+             Potential Error conflicts with value at row 2 column 7 which has also been marked as red for later
+  Checking grid: 4
+  Checking grid: 5
+  Checking grid: 6
+  Checking grid: 7
+  Checking grid: 8
+  Checking grid: 9
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 6, column 8
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 2, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 2 column 8
+        RESULTS: Solution: Replace 4 with 5
+
+     Check the row, column, and grid of the potential error at row 2, column 8
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 2 column 7 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 2, column 8
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 2 column 7 as clean, signaled by taking its redness away
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+test3.txt results:
+
+The final answer:
+
+There was an error at row 3 column 3
+    Solution: Replace 6 with 9
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+  Checking row: 2
+  Checking row: 3
+       POTENTIAL ERROR: Duplicate value of 6 at row: 3 , column: 9
+             Potential Error conflicts with value at row 3 column 3 which has also been marked as red for later
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+       POTENTIAL ERROR: Duplicate value of 6 at row: 7 , column: 3
+             Potential Error conflicts with value at row 3 column 3 which has also been marked as red for later
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+  Checking column: 7
+  Checking column: 8
+  Checking column: 9
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+       POTENTIAL ERROR: Duplicate value of 6 at row: 3 , column: 3
+             Potential Error conflicts with value at row 2 column 2 which has also been marked as red for later
+  Checking grid: 2
+  Checking grid: 3
+  Checking grid: 4
+  Checking grid: 5
+  Checking grid: 6
+  Checking grid: 7
+  Checking grid: 8
+  Checking grid: 9
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 7, column 3
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 3, column 3
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 3 column 3
+        RESULTS: Solution: Replace 6 with 9
+
+     Check the row, column, and grid of the potential error at row 3, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 3, column 3
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.
+
+     Check the row, column, and grid of the potential error at row 3, column 3
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 2 column 2 as clean, signaled by taking its redness away
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+test4.txt results:
+
+The final answer:
+There was an error at row 6 column 6
+    Solution: Replace 5 with 1
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+  Checking row: 2
+  Checking row: 3
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+       POTENTIAL ERROR: Duplicate value of 5 at row: 6 , column: 6
+             Potential Error conflicts with value at row 6 column 2 which has also been marked as red for later
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+       POTENTIAL ERROR: Duplicate value of 5 at row: 6 , column: 6
+             Potential Error conflicts with value at row 3 column 6 which has also been marked as red for later
+  Checking column: 7
+  Checking column: 8
+  Checking column: 9
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+  Checking grid: 2
+  Checking grid: 3
+  Checking grid: 4
+  Checking grid: 5
+       POTENTIAL ERROR: Duplicate value of 5 at row: 6 , column: 6
+             Potential Error conflicts with value at row 5 column 5 which has also been marked as red for later
+  Checking grid: 6
+  Checking grid: 7
+  Checking grid: 8
+  Checking grid: 9
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 6, column 6
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        I can now say that the conflicted value at row 3 column 6 is clean, signaled by taking its redness away
+        Since, the row, column, and grid of this potential error are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 6 column 6
+        RESULTS: Solution: Replace 5 with 1
+
+     Check the row, column, and grid of the potential error at row 6, column 6
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 5 column 5 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 6, column 6
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 6 column 2 as clean, signaled by taking its redness away
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+test5.txt results:
+
+The final answer:
+There was an error at row 9 column 7
+    Solution: Replace 2 with 5
+There was an error at row 9 column 9
+    Solution: Replace 1 with 9
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+  Checking row: 2
+  Checking row: 3
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+       POTENTIAL ERROR: Duplicate value of 2 at row: 9 , column: 7
+             Potential Error conflicts with value at row 9 column 2 which has also been marked as red for later
+       POTENTIAL ERROR: Duplicate value of 1 at row: 9 , column: 9
+             Potential Error conflicts with value at row 9 column 4 which has also been marked as red for later
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+  Checking column: 7
+       POTENTIAL ERROR: Duplicate value of 2 at row: 9 , column: 7
+             Potential Error conflicts with value at row 3 column 7 which has also been marked as red for later
+  Checking column: 8
+  Checking column: 9
+       POTENTIAL ERROR: Duplicate value of 1 at row: 9 , column: 9
+             Potential Error conflicts with value at row 5 column 9 which has also been marked as red for later
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+  Checking grid: 2
+  Checking grid: 3
+  Checking grid: 4
+  Checking grid: 5
+  Checking grid: 6
+  Checking grid: 7
+  Checking grid: 8
+  Checking grid: 9
+       POTENTIAL ERROR: Duplicate value of 2 at row: 9 , column: 7
+             Potential Error conflicts with value at row 7 column 9 which has also been marked as red for later
+       POTENTIAL ERROR: Duplicate value of 1 at row: 9 , column: 9
+             Potential Error conflicts with value at row 7 column 7 which has also been marked as red for later
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 9, column 7
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        I can now say that the conflicted value at row 9 column 2 is clean, signaled by taking its redness away
+        Since, the row, column, and grid of this potential error are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 9 column 7
+        RESULTS: Solution: Replace 2 with 5
+
+     Check the row, column, and grid of the potential error at row 9, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        I can now say that the conflicted value at row 9 column 4 is clean, signaled by taking its redness away
+        Since, the row, column, and grid of this potential error are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 9 column 9
+        RESULTS: Solution: Replace 1 with 9
+
+     Check the row, column, and grid of the potential error at row 9, column 7
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 7 column 9 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 7 column 7 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 7
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 3 column 7 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 5 column 9 as clean, signaled by taking its redness away
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+
+test6.txt results:
+
+The final answer:
+
+There was an error at row 9 column 3
+    Solution: Replace 3 with 4
+There was an error at row 9 column 8
+    Solution: Replace 9 with 8
+
+The feedback on the UI:
+
+1.) First go through every row to see what the rows are missing, and determine the potential values can be taken out to fit in these missing values...
+  Checking row: 1
+  Checking row: 2
+  Checking row: 3
+  Checking row: 4
+  Checking row: 5
+  Checking row: 6
+  Checking row: 7
+  Checking row: 8
+  Checking row: 9
+       POTENTIAL ERROR: Duplicate value of 3 at row: 9 , column: 3
+             Potential Error conflicts with value at row 9 column 1 which has also been marked as red for later
+       POTENTIAL ERROR: Duplicate value of 9 at row: 9 , column: 9
+             Potential Error conflicts with value at row 9 column 8 which has also been marked as red for later
+2.) Now go through every column to see what the columns are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking column: 1
+  Checking column: 2
+  Checking column: 3
+       POTENTIAL ERROR: Duplicate value of 3 at row: 9 , column: 3
+             Potential Error conflicts with value at row 2 column 3 which has also been marked as red for later
+  Checking column: 4
+  Checking column: 5
+  Checking column: 6
+  Checking column: 7
+  Checking column: 8
+       POTENTIAL ERROR: Duplicate value of 9 at row: 9 , column: 8
+             Potential Error conflicts with value at row 5 column 8 which has also been marked as red for later
+  Checking column: 9
+3.) Now go through every 3x3 grid to see what the 3x3 grids are missing, and determine the potential values can be taken out (marked in red, these are duplicates) to fit in these missing values...
+  Checking grid: 1
+  Checking grid: 2
+  Checking grid: 3
+  Checking grid: 4
+  Checking grid: 5
+  Checking grid: 6
+  Checking grid: 7
+       POTENTIAL ERROR: Duplicate value of 3 at row: 9 , column: 3
+             Potential Error conflicts with value at row 9 column 1 which has also been marked as red for later
+  Checking grid: 8
+  Checking grid: 9
+       POTENTIAL ERROR: Duplicate value of 9 at row: 9 , column: 9
+             Potential Error conflicts with value at row 9 column 8 which has also been marked as red for later
+4.) Now, reduce potential sources of errors into the actual source of the error, so that correct solutions may be suggested:
+
+     Check the row, column, and grid of the potential error at row 9, column 3
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        I can now say that the conflicted value at row 2 column 3 is clean, signaled by taking its redness away
+        Since, the row, column, and grid of this potential error are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 9 column 3
+        RESULTS: Solution: Replace 3 with 4
+
+     Check the row, column, and grid of the potential error at row 9, column 3
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 9 column 1 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 9, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:
+        RESULTS: There was an error at row 9 column 8
+        RESULTS: Solution: Replace 9 with 8
+
+     Check the row, column, and grid of the potential error at row 9, column 8
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 5 column 8 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 3
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.
+        Except that I can declare the conflicted value at row 9 column 1 as clean, signaled by taking its redness away
+
+     Check the row, column, and grid of the potential error at row 9, column 9
+        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.
+        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away
+        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.
+        So, I go to row 9, column 8
+        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error
+        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.
+That is all that is done to check the sodoku grid.
+The things tagged with RESULTS end up being displayed in the results panel.
+If there are no things tagged with results, the sodoku grid was a valid sodoku grid.

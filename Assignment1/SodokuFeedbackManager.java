@@ -186,6 +186,9 @@ class SodokuFeedbackManager {
 
         if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) && (currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith())) {
 
+          System.out.println("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+(currentRowInStepThrough + 1)+" , column: "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1));
+          System.out.println("             Potential Error conflicts with value at row " +(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith() + 1)+" column "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith() + 1)+ " which has also been marked as red for later");
+
           //highlight the potential errors in this row as red:
           sodokuUIManager.setPanelColor(Color.RED, currentRowInStepThrough, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
           sodokuUIManager.setWorkText("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+(currentRowInStepThrough + 1)+" , column: "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1));
@@ -237,7 +240,7 @@ class SodokuFeedbackManager {
         }
 
         System.out.println("  Checking column: "+(currentColumnInStepThrough + 1));
-        sodokuUIManager.setWorkText(" Checking column: "+(currentColumnInStepThrough + 1));
+        sodokuUIManager.setWorkText("  Checking column: "+(currentColumnInStepThrough + 1));
 
       }
 
@@ -253,6 +256,9 @@ class SodokuFeedbackManager {
       for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
 
         if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith())) {
+
+          System.out.println("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+(currentRowInStepThrough + 1)+" , column: "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1));
+          System.out.println("             Potential Error conflicts with value at row " +(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith() + 1)+" column "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith() + 1)+ " which has also been marked as red for later");
 
           //highlight the potential errors in this row as red:
           sodokuUIManager.setPanelColor(Color.RED, currentRowInStepThrough, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
@@ -332,7 +338,10 @@ class SodokuFeedbackManager {
 
       for (int errorNumber = 0; errorNumber < listOfErrorsAndSuggestionsThatHaveBeenDetected.size(); errorNumber++) {
 
-        if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError())) {
+        if ((currentRowInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfError()) && (currentColumnInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()) && (currentGridInStepThrough == listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getErrorGridNumber())) {
+
+          System.out.println("       POTENTIAL ERROR: Duplicate value of "+sodukuGrid[currentRowInStepThrough][listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError()]+" at row: "+(currentRowInStepThrough + 1)+" , column: "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError() + 1));
+          System.out.println("             Potential Error conflicts with value at row " +(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getRowOfNumberThisValueConflictsWith() + 1)+" column "+(listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfNumberThisValueConflictsWith() + 1)+ " which has also been marked as red for later");
 
           //highlight the potential errors in this row as red:
           sodokuUIManager.setPanelColor(Color.RED, currentRowInStepThrough, listOfErrorsAndSuggestionsThatHaveBeenDetected.get(errorNumber).getColumnOfError());
@@ -426,6 +435,8 @@ class SodokuFeedbackManager {
         }
 
         errorContainer = listOfErrorsAndSuggestionsThatHaveBeenDetected.get(currentErrorInStepThrough);
+
+        System.out.println("");
         System.out.println("    Check the row, column, and grid of the potential error at row "+(errorContainer.getRowOfError() + 1)+", column "+(errorContainer.getColumnOfError() + 1));
         System.out.println("        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.");
 
@@ -433,26 +444,57 @@ class SodokuFeedbackManager {
         sodokuUIManager.setEntireColumnOfPanelsToColor(Color.YELLOW, Color.RED, errorContainer.getColumnOfError());
         sodokuUIManager.setThreeByThreeGridToColor(Color.YELLOW, Color.RED, determineGrid(errorContainer.getRowOfError(), errorContainer.getColumnOfError()));
 
+        sodokuUIManager.setWorkText("");
         sodokuUIManager.setWorkText("     Check the row, column, and grid of the potential error at row "+(errorContainer.getRowOfError() + 1)+", column "+(errorContainer.getColumnOfError() + 1));
         sodokuUIManager.setWorkText("        For this potential error to be the actual source of the error, then all 3 of these things must be missing the same item.");
 
-        if (errorContainer.getPotentialErrorWasDeterminedToBeTheActualError()) {
+        if (errorContainer.getPotentialErrorWasDeterminedToBeTheActualError() && (errorContainer.getSuggestedValue() != 0)) {
 
-          System.out.println("        The row, column, and grid of this potential error are all mising the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
-          System.out.println("        RESULTS: There was an error at row"+(errorContainer.getRowOfError() + 1)+" column "+(errorContainer.getColumnOfError() + 1));
+          System.out.println("        I can now say that the conflicted value at row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+" column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1) + " is clean, signaled by taking its redness away");
+          System.out.println("        Since the row, column, and grid of this potential error are all mising the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
+          System.out.println("        RESULTS: There was an error at row "+(errorContainer.getRowOfError() + 1)+" column "+(errorContainer.getColumnOfError() + 1));
           System.out.println("        RESULTS: Solution: Replace "+sodukuGrid[errorContainer.getRowOfError()][errorContainer.getColumnOfError()]+" with "+errorContainer.getSuggestedValue());
 
-          sodokuUIManager.setWorkText("        The row, column, and grid of this potential error are all mising the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
-          sodokuUIManager.setWorkText("        RESULTS: There was an error at row"+(errorContainer.getRowOfError() + 1)+" column "+(errorContainer.getColumnOfError() + 1));
+          sodokuUIManager.setPanelColor(Color.LIGHT_GRAY, errorContainer.getRowOfNumberThisValueConflictsWith(), errorContainer.getColumnOfNumberThisValueConflictsWith());
+
+          sodokuUIManager.setWorkText("        I can now say that the conflicted value at row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+" column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1) + " is clean, signaled by taking its redness away");
+          sodokuUIManager.setWorkText("        Since, the row, column, and grid of this potential error are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
+          sodokuUIManager.setWorkText("        RESULTS: There was an error at row "+(errorContainer.getRowOfError() + 1)+" column "+(errorContainer.getColumnOfError() + 1));
           sodokuUIManager.setWorkText("        RESULTS: Solution: Replace "+sodukuGrid[errorContainer.getRowOfError()][errorContainer.getColumnOfError()]+" with "+errorContainer.getSuggestedValue());
 
+        }
+        else if (errorContainer.getSuggestedValue() != 0) {
+
+          System.out.println("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness");
+          System.out.println("        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.");
+
+          sodokuUIManager.setPanelColor(Color.LIGHT_GRAY, errorContainer.getRowOfError(), errorContainer.getColumnOfError());
+          sodokuUIManager.setWorkText("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking away its redness");
+          sodokuUIManager.setWorkText("        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.");
+
+          needAnotherStepThroughToPortrayCheckingOfValueThePotentialErrorWasInConflictWith = true;
+          return;
+
+        }
+        else if (errorContainer.getPotentialErrorWasDeterminedToBeTheActualError()) {
+
+          //System.out.println("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error")
+
+          System.out.println("        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.");
+          sodokuUIManager.setWorkText("        This is a confirmed error, but the suggestion for this potential error has been reported by some other spot on the grid, so nothing to report here.");
+          sodokuUIManager.setWorkText("        Except that I can declare the conflicted value at row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+ " column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1) +" as clean, signaled by taking its redness away");
+
+          sodokuUIManager.setPanelColor(Color.LIGHT_GRAY, errorContainer.getRowOfNumberThisValueConflictsWith(), errorContainer.getColumnOfNumberThisValueConflictsWith());
 
         }
         else {
 
-          System.out.println("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error");
+          //the suggested value is 0 because the error in conflict was the actual error, but was already given a solution by a previous error container:
+          System.out.println("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away");
+          System.out.println("        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.");
+
           sodokuUIManager.setPanelColor(Color.LIGHT_GRAY, errorContainer.getRowOfError(), errorContainer.getColumnOfError());
-          sodokuUIManager.setWorkText("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error");
+          sodokuUIManager.setWorkText("        But the row, column, and grid of this potential error are not all missing the same thing, so I declare this grid as not being an error, signaled by taking its redness away");
           sodokuUIManager.setWorkText("        This means then that the value this potential error conflicts with needs to be looked at to see if its the actual error.");
 
           needAnotherStepThroughToPortrayCheckingOfValueThePotentialErrorWasInConflictWith = true;
@@ -465,6 +507,9 @@ class SodokuFeedbackManager {
 
         needAnotherStepThroughToPortrayCheckingOfValueThePotentialErrorWasInConflictWith = false;
 
+        System.out.println("        So, I go to row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+", column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1));
+        System.out.println("        And repeat the same process, check the grid, row, and column this number that conflicts with the potential error is in, which must all be missing the same thing for this number to be the error");
+
         sodokuUIManager.setEntireRowOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, errorContainer.getRowOfError());
         sodokuUIManager.setEntireColumnOfPanelsToColor(Color.LIGHT_GRAY, Color.RED, errorContainer.getColumnOfError());
         sodokuUIManager.setThreeByThreeGridToColor(Color.LIGHT_GRAY, Color.RED, determineGrid(errorContainer.getRowOfError(), errorContainer.getColumnOfError()));
@@ -476,15 +521,32 @@ class SodokuFeedbackManager {
         sodokuUIManager.setEntireColumnOfPanelsToColor(Color.YELLOW, Color.RED, errorContainer.getColumnOfNumberThisValueConflictsWith());
         sodokuUIManager.setThreeByThreeGridToColor(Color.YELLOW, Color.RED, determineGrid(errorContainer.getRowOfNumberThisValueConflictsWith(), errorContainer.getColumnOfNumberThisValueConflictsWith()));
 
-        if (errorContainer.getConflictingValueWasDeterminedToBeTheActualError()) {
+        if (errorContainer.getConflictingValueWasDeterminedToBeTheActualError() && (errorContainer.getSuggestedValue() != 0)) {
 
           System.out.println("        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
-          System.out.println("        RESULTS: There was an error at row"+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+" column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1));
+          System.out.println("        RESULTS: There was an error at row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+" column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1));
           System.out.println("        RESULTS: Solution: Replace "+sodukuGrid[errorContainer.getRowOfNumberThisValueConflictsWith()][errorContainer.getColumnOfNumberThisValueConflictsWith()]+" with "+errorContainer.getSuggestedValue());
 
           sodokuUIManager.setWorkText("        The row, column, and grid of this number are all missing the same thing, so I declare this grid as an actual error, and suggest the item that all of these things are missing as the solution, leading to a result of:");
           sodokuUIManager.setWorkText("        RESULTS: There was an error at row "+(errorContainer.getRowOfNumberThisValueConflictsWith() + 1)+" column "+(errorContainer.getColumnOfNumberThisValueConflictsWith() + 1));
           sodokuUIManager.setWorkText("        RESULTS: Solution: Replace "+sodukuGrid[errorContainer.getRowOfNumberThisValueConflictsWith()][errorContainer.getColumnOfNumberThisValueConflictsWith()]+" with "+errorContainer.getSuggestedValue());
+
+        }
+        else if (errorContainer.getSuggestedValue() != 0){
+
+          System.out.println("        But the row, column, and grid of this number are also not all missing the same thing, so I declare this grid as not being an error as well by removing its red color");
+          System.out.println("        This means then that the source of this error lies somewhere else, so I continue as before.");
+
+          sodokuUIManager.setWorkText("        But the row, column, and grid of this number are also not all missing the same thing, so I declare this grid as not being an error as well by removing its red color");
+          sodokuUIManager.setWorkText("        This means then that the source of this error lies somewhere else, so I continue as before.");
+          sodokuUIManager.setPanelColor(Color.LIGHT_GRAY, errorContainer.getRowOfNumberThisValueConflictsWith(), errorContainer.getColumnOfNumberThisValueConflictsWith());
+
+        }
+        else {
+
+          //The suggested value is 0 because this conflicted value is in fact an error, but it has already been confirmed so this is a duplicate error container:
+          System.out.println("        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.");
+          sodokuUIManager.setWorkText("        The row, column, and grid of this number are all missing the same thing, so this grid is an actual error, but its suggestion has already been reported by another spot, so nothing new to report here.");
 
         }
 
@@ -504,8 +566,12 @@ class SodokuFeedbackManager {
       resetStepThrough();
 
       System.out.println("That is all that is done to check the sodoku grid.");
+      System.out.println("The things tagged with RESULTS end up being displayed in the results panel.");
+      System.out.println("If there are no things tagged with results, the sodoku grid was a valid sodoku grid.");
+
       sodokuUIManager.setWorkText("That is all that is done to check the sodoku grid.");
       sodokuUIManager.setWorkText("The things tagged with RESULTS end up being displayed in the results panel.");
+      sodokuUIManager.setWorkText("If there are no things tagged with results, the sodoku grid was a valid sodoku grid.");
       sodokuUIManager.setEntireGridOfPanelsToColor(Color.LIGHT_GRAY, Color.RED);
 
     }
