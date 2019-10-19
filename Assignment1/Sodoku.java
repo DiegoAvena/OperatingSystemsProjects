@@ -63,19 +63,6 @@ class Sodoku {
       threadsRunning[1] = columnThreadTwo;
       threadsRunning[2] = columnThreadThree;
 
-      /*for (int i = 0; i < 3; i++) {
-
-        try {
-
-          threadsRunning[i].join();
-
-        }
-        catch(Exception e) {
-
-        }
-
-      } */
-
       threadsRunning[3] = rowThreadOne;
       threadsRunning[4] = rowThreadTwo;
       threadsRunning[5] = rowThreadThree;
@@ -106,16 +93,8 @@ class Sodoku {
 
       }
 
-
-
       System.out.println("RESULTS:");
       masterValidator.getResults();
-      /*for (int i = 0; i < masterValidator.getListOfErrorsAndSuggestionsThatHaveBeenDetected().size(); i++) {
-
-        System.out.println("Error at row "+masterValidator.getListOfErrorsAndSuggestionsThatHaveBeenDetected().get(i).getRowOfError()+" , column "+masterValidator.getListOfErrorsAndSuggestionsThatHaveBeenDetected().get(i).getColumnOfError());
-
-      } */
-
 
     }
 

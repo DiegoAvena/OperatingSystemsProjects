@@ -70,13 +70,16 @@ class SodokuSubGridValidator extends SodukuValidator implements Runnable {
               set once I am done since I need to know what values are missing in order to suggest them as solutions
 
             */
+
             //Prevent adding of duplicates:
             ErrorAndSuggestionContainer errorAndSuggestionContainer = new ErrorAndSuggestionContainer(row, column, arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][0], arrayOfArrayOfcurrentValuesFoundInGridsBeingChecked[currentGridNumber][sodukuGrid[row][column] - 1][1], "");
+            //listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
+
             if (listOfErrorsAndSuggestionsThatHaveBeenDetected.contains(errorAndSuggestionContainer) == false) {
 
               listOfErrorsAndSuggestionsThatHaveBeenDetected.add(errorAndSuggestionContainer);
 
-            }
+            } 
 
           }
 

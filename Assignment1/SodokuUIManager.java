@@ -53,6 +53,13 @@ class SodokuUIManager extends JFrame {
 
     }
 
+    public void clearWorkText() {
+
+      workText.selectAll();
+      workText.replaceSelection("");
+
+    }
+
     public JButton GetShowWorkButton() {
 
       return showWorkButton;
