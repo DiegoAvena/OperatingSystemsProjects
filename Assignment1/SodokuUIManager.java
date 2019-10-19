@@ -66,11 +66,73 @@ class SodokuUIManager extends JFrame {
 
     }
 
+    public void setThreeByThreeGridToColor(Color color, Color colorToLeaveAlone, int gridNum) {
+
+      int startingRow;
+      int startingColumn;
+
+      if (gridNum == 0 || gridNum == 1 || gridNum == 2) {
+
+        startingRow = 0;
+
+      }
+      else if (gridNum == 3 || gridNum == 4 || gridNum == 5) {
+
+        startingRow = 3;
+
+      }
+      else {
+
+        startingRow = 6;
+
+      }
+
+      if (gridNum == 0 || gridNum == 3 || gridNum == 6) {
+
+        startingColumn = 0;
+
+      }
+      else if (gridNum == 1 || gridNum == 4 || gridNum == 7) {
+
+        startingColumn = 3;
+
+      }
+      else {
+
+        startingColumn = 6;
+
+      }
+
+      for (int row = startingRow; (row - startingRow) < 3; row++) {
+
+        for (int column = startingColumn; (column - startingColumn) < 3; column++) {
+
+          if (colorToLeaveAlone != null) {
+
+            if (thePanelsOnTheSodokuGrid[row][column].getBackground() != colorToLeaveAlone) {
+
+              thePanelsOnTheSodokuGrid[row][column].setBackground(color);
+
+            }
+
+          }
+          else {
+
+            thePanelsOnTheSodokuGrid[row][column].setBackground(color);
+
+          }
+
+        }
+
+      }
+
+    }
+
     public SodokuUIManager(int[][] theSodokuGridToRepresent) {
 
       super("Sodoku Validator");
-      windowWidth = 1000;
-      windowHeight = 600;
+      windowWidth = 2048;
+      windowHeight = 1024;
 
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Makes sure the program ends when user closes window
       setLayout(new BorderLayout());
@@ -133,7 +195,7 @@ class SodokuUIManager extends JFrame {
 
       //workText = new JLabel("STEPS TAKEN SHOW HERE", SwingConstants.CENTER);
       //workText.setFont(new Font("Arial", Font.BOLD, 30));
-      workText = new JTextArea(10, 20);
+      workText = new JTextArea(10, 50);
       workText.setText("STEPS TAKEN TO GET RESULTS WILL SHOW HERE: " + '\n');
       workText.setFont(new Font("Arial", Font.BOLD, 12));
       workText.setBackground(Color.WHITE);
@@ -201,71 +263,26 @@ class SodokuUIManager extends JFrame {
 
     }
 
-    public void setEntireGridOfPanelsToColor(Color color, int gridNum) {
+    public void setEntireGridOfPanelsToColor(Color color, Color colorToLeaveAlone) {
 
-      int startingRowNum = 0;
-      int startingColumnNum = 0;
+      for (int row = 0; row < 9; row++) {
 
-      if (gridNum == 0) {
+        for (int column = 0; column < 9; column++) {
 
-        startingRowNum = 0;
-        startingColumnNum = 0;
+          if (colorToLeaveAlone != null) {
 
-      }
-      else if (gridNum == 1) {
+            if (thePanelsOnTheSodokuGrid[row][column].getBackground() != colorToLeaveAlone) {
 
-        startingRowNum = 0;
-        startingColumnNum = 3;
+              thePanelsOnTheSodokuGrid[row][column].setBackground(color);
 
-      }
-      else if (gridNum == 2) {
+            }
 
-        startingRowNum = 0;
-        startingColumnNum = 6;
+          }
+          else {
 
-      }
-      else if (gridNum == 3) {
+            thePanelsOnTheSodokuGrid[row][column].setBackground(color);
 
-        startingRowNum = 1;
-        startingColumnNum = 0;
-
-      }
-      else if (gridNum == 4) {
-
-        startingRowNum = 1;
-        startingColumnNum = 3;
-
-      }
-      else if (gridNum == 5) {
-
-        startingRowNum = 1;
-        startingColumnNum = 6;
-
-      }
-      else if (gridNum == 6) {
-
-        startingRowNum = 2;
-        startingColumnNum = 0;
-
-      }
-      else if (gridNum == 7) {
-
-        startingRowNum = 2;
-        startingColumnNum = 3;
-
-      }
-      else if (gridNum == 8) {
-
-        startingRowNum = 2;
-        startingColumnNum = 6;
-
-      }
-
-      for (int row = startingRowNum; (row - startingRowNum) < 3; row++) {
-
-        for (int column = startingColumnNum; (column - startingColumnNum) < 3; column++) {
-
-          thePanelsOnTheSodokuGrid[row][column].setBackground(color);
+          }
 
         }
 
