@@ -1,0 +1,258 @@
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 1 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 2 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 3 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 4 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 5 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 6 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 7 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 8 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+
+Did 9 out of 10 simulations to do.
+
+It is time for Fred to push up.
+Fred position: 2.0
+Wilma position: 6.0
+Fred position: 3.0
+Wilma position: 5.0
+Fred position: 4.0
+Wilma position: 4.0
+Fred position: 5.0
+Wilma position: 3.0
+Fred position: 6.0
+Wilma position: 2.0
+Fred position: 7.0
+Wilma position: 1.0
+
+It is time for Wilma to push up.
+Wilma position: 2.5
+Fred position: 5.5
+Wilma position: 4.0
+Fred position: 4.0
+Wilma position: 5.5
+Fred position: 2.5
+Wilma position: 7.0
+Fred position: 1.0
+Did 10 out of 10 simulations to do. Done!
