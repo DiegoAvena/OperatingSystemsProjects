@@ -11,7 +11,7 @@ class Wilma extends SeeSawRider implements Runnable {
     this.letThisRiderDetermineWhenTheSimulationEnds = letThisRiderDetermineWhenTheSimulationEnds;
     this.riderName = riderName;
 
-    mySemaphore = new Semaphore(0); //Wilma will go after fred
+    mySemaphore = new Semaphore(0); //Wilma will go after fred so initialize semaphore to 0
 
   }
 

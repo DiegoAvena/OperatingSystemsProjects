@@ -11,7 +11,7 @@ class Fred extends SeeSawRider implements Runnable {
     this.letThisRiderDetermineWhenTheSimulationEnds = letThisRiderDetermineWhenTheSimulationEnds;
     this.riderName = riderName;
 
-    mySemaphore = new Semaphore(1); //Fred will go first
+    mySemaphore = new Semaphore(1); //Fred will go first so initialize his semaphore to 1
 
   }
 

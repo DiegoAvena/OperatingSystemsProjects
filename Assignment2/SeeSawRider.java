@@ -13,13 +13,13 @@ class SeeSawRider {
 
   protected Semaphore mySemaphore; //the semaphore that belongs to this person
 
-  protected boolean letThisRiderDetermineWhenTheSimulationEnds;
+  protected boolean letThisRiderDetermineWhenTheSimulationEnds; //determines if this is the rider who determines when the simulation ends
 
   //when both booleans below are true, then this means 1 simulation has occured so increment the number of simulations completed:
   private boolean wentUpAlready;
   private boolean wentDownAlready;
 
-  protected String riderName;
+  protected String riderName; //the name of the rider
 
   public SeeSawRider() {
 
@@ -91,15 +91,17 @@ class SeeSawRider {
 
   }
 
+  //Simulates the pushing up and falling down of riders on the seesaw
   protected void pushUp() {
 
     try {
 
       while (numberOfSimulationsRanSoFar < (numberOfSimulationsToDo - 1)) {
 
-        mySemaphore.acquire();
+        mySemaphore.acquire(); //waits until the other person is done pushing up
         System.out.println();
 
+        //Check if 1 more seesaw simulation has been completed (when the same person goes up and then down, this is considered as 1 simulation)
         if ((wentUpAlready && wentDownAlready) && (letThisRiderDetermineWhenTheSimulationEnds)) {
 
           numberOfSimulationsRanSoFar++;
@@ -115,6 +117,7 @@ class SeeSawRider {
 
         System.out.println("It is time for "+riderName+" to push up.");
 
+        //Keep pushing up until the other rider is within 1 ft of the ground below them
         while (otherRider.getCurrentPositionInTheAir() > 1) {
 
           //keep pushing up:
