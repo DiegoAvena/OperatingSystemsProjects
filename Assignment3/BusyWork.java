@@ -17,7 +17,7 @@ class BusyWork extends SchedularContainer {
 
     while (exit == false) {
 
-      if (mySemaphore.tryAcquire() == false) {
+      /*if (mySemaphore.tryAcquire() == false) {
 
         System.out.println("Task with period "+taskPeriod+" is waiting on semaphore");
 
@@ -29,7 +29,7 @@ class BusyWork extends SchedularContainer {
 
         try {
 
-          Thread.sleep(1000);
+          Thread.sleep(Long.MAX_VALUE);
 
         }
         catch (InterruptedException e) {
@@ -43,13 +43,27 @@ class BusyWork extends SchedularContainer {
 
         try {
 
+          System.out.println("Task with period "+taskPeriod+" is acquiring semaphore");
           mySemaphore.acquire();
+          System.out.println("Task with period "+taskPeriod+" acquired semaphore");
 
         }
         catch (Exception e) {
 
 
         }
+
+      } */
+
+      try {
+
+        //System.out.println("Task with period "+taskPeriod+" is acquiring semaphore");
+        mySemaphore.acquire();
+        //System.out.println("Task with period "+taskPeriod+" acquired semaphore");
+
+      }
+      catch (Exception e) {
+
 
       }
 
@@ -65,10 +79,12 @@ class BusyWork extends SchedularContainer {
 
       }
 
-      System.out.println("Task with period "+taskPeriod+" is running.");
+      //System.out.println("Task with period "+taskPeriod+" is running.");
 
       numberOfTimesThreadHasRan++;
       finishedRunning = true;
+
+      //System.out.println("Task with period "+taskPeriod+" is done running.");
 
       if (semaphoreOfOtherTaskThatMustWaitForMeToFinish != null) {
 
@@ -76,8 +92,6 @@ class BusyWork extends SchedularContainer {
 
       }
 
-      System.out.println("Task with period "+taskPeriod+" is done running.");
-      
       //RMSThread.interrupt(); //wakes up RMS so that another task may be scheduled
       break;
 

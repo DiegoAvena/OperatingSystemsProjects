@@ -40,6 +40,12 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
+  public boolean getHasBeenScheduled() {
+
+    return hasBeenScheduled;
+
+  }
+
   public void setHasBeenScheduled(boolean hasBeenScheduled) {
 
     this.hasBeenScheduled = hasBeenScheduled;
@@ -49,6 +55,12 @@ public abstract class SchedularContainer implements Runnable {
   public void setSemaphoreOfOtherTaskThatMustWaitForMeToFinish(Semaphore semaphoreOfOtherTaskThatMustWaitForMeToFinish) {
 
     this.semaphoreOfOtherTaskThatMustWaitForMeToFinish = semaphoreOfOtherTaskThatMustWaitForMeToFinish;
+
+  }
+
+  public Semaphore getSemaphoreOfOtherTaskThatMustWaitForMeToFinish() {
+
+    return semaphoreOfOtherTaskThatMustWaitForMeToFinish;
 
   }
 
@@ -118,9 +130,31 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
-  public void exit() {
+  public void stop() {
 
     exit = true;
+
+  }
+
+  public void Pause() {
+
+    try {
+
+      //System.out.println("THREAD PAUSED");
+      //System.out.println("Thread done running: "+finishedRunning);
+      Thread.sleep(Long.MAX_VALUE);
+
+    } catch (InterruptedException e) {
+
+      //System.out.println("Thread resumed");
+
+    }
+
+  }
+
+  public void Resume() {
+
+    //interrupt();
 
   }
 

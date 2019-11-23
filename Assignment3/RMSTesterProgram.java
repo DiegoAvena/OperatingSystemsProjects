@@ -2,7 +2,8 @@ class RMSTesterProgram {
 
   public static void main(String[] args) {
 
-    //BusyWork busyWork = new BusyWork(100);
+    //Case 1:
+    System.out.println("Case 1: No overruns" + '\n');
     BusyWork taskOne = new BusyWork(100, 1);
     BusyWork taskTwo = new BusyWork(200, 2);
     BusyWork taskThree = new BusyWork(400, 4);
@@ -12,6 +13,34 @@ class RMSTesterProgram {
     RMS<BusyWork> scheduler = new RMS<BusyWork>(arrayOfTasks, 10);
 
     Thread RMSThread = new Thread(scheduler);
+
+    taskOne.setRMSThread(RMSThread);
+    taskTwo.setRMSThread(RMSThread);
+    taskThree.setRMSThread(RMSThread);
+    taskFour.setRMSThread(RMSThread);
+
+    RMSThread.start();
+
+    try {
+
+      RMSThread.join();
+
+    } catch (Exception e) {
+
+
+    }
+
+    System.out.println("Case 2: Failed case where doWork function is called as many times as required to lead to an overrun condition t2");
+
+    taskOne = new BusyWork(100, 1);
+    taskTwo = new BusyWork(20000, 2);
+    taskThree = new BusyWork(400, 4);
+    taskFour = new BusyWork(1600, 16);
+
+    arrayOfTasks = new BusyWork[] {taskOne, taskTwo, taskThree, taskFour};
+    scheduler = new RMS<BusyWork>(arrayOfTasks, 10);
+
+    RMSThread = new Thread(scheduler);
 
     taskOne.setRMSThread(RMSThread);
     taskTwo.setRMSThread(RMSThread);

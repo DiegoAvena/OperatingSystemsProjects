@@ -1,0 +1,23 @@
+---------------------------------------------------------------
+CASE 1: No overruns
+
+Task 1 results:
+Times ran: 160
+Times it overran: 0
+
+Task 2 results:
+Times ran: 80
+Times it overran: 0
+
+Task 3 results:
+Times ran: 40
+Times it overran: 0
+
+Task 4 results:
+Times ran: 10
+Times it overran: 0
+---------------------------------------------------------------
+
+---------------------------------------------------------------
+Case 2: Failed case where do function is called as many times as
+required to lead to an overrun condition in Task 2 (T2).
