@@ -120,7 +120,7 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       //System.out.println("Starting thread "+ (i + 1));
       threadsCreated[i].start();
-      //arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
+      arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
 
     }
 
@@ -145,29 +145,62 @@ class RMS <T extends SchedularContainer> implements Runnable{
     while (true) {
 
       //System.out.println("Current frame count: "+currentFrame);
-
+      //ResetSemaphoreReferences();
       dispatcher.stop();
       currentFrame++;
-      ResetSemaphoreReferences();
       //amountOfTimeElapsedSinceStartOfCurrentFramePeriod = System.currentTimeMillis() - timeSchedularBeganCurrentFramePeriodAt;
 
       //check for overruns in current task:
-      if ((arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFrameTaskMustBeCompletedBy() > currentFrame) && (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFinishedRunning() == false)) {
+      for (int i = 1; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
+
+        if ((arrayOfObjectsToCreateAndScheduleThreadsFor[i].getFrameTaskMustBeCompletedBy() > currentFrame) && (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getFinishedRunning() == false) && (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() == false)) {
+
+          //this task had an overrun:
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(true); //so that this task skips its next execution period
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].SetNumberOfTimesThreadOverran(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getNumberOfTimesThreadOverran() + 1);
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(false);
+          //break;
+
+        }
+        else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() /*&& ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)*/) {
+
+          //System.out.println("Task "+(currentTaskIndex + 1)+"is can now be scheduled for its upcomming execution period, since it already skipped an execution period due to an overrun.");
+
+          //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(false);
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true); //so that dispatcher knows it can now resume this thread for completion
+          //break;
+
+        }
+
+      }
+
+      /*if ((arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFrameTaskMustBeCompletedBy() > currentFrame) && (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFinishedRunning() == false) && (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getThisTaskRecentlyOverranItsDeadline() == false)) {
 
         //this task had an overrun:
-        //System.out.println("Task "+(currentTaskIndex + 1)+" had an overrun...");
         arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setThisTaskRecentlyOverranItsDeadline(true); //so that this task skips its next execution period
         arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].SetNumberOfTimesThreadOverran(arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getNumberOfTimesThreadOverran() + 1);
         arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setHasBeenScheduled(false);
 
       }
+      else if (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getTaskPeriod()) == 0)) {
+
+        //System.out.println("Task "+(currentTaskIndex + 1)+"is can now be scheduled for its upcomming execution period, since it already skipped an execution period due to an overrun.");
+
+        //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
+        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setThisTaskRecentlyOverranItsDeadline(false);
+        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setHasBeenScheduled(true); //so that dispatcher knows it can now resume this thread for completion
+
+      } */
 
       //pause thread that was running, since thread 1 now needs to run
       if ((arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFinishedRunning() == false) && (currentTaskIndex != 0)) {
 
-        try {
+        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].Pause();
 
-          //System.out.println("RMS Pausing thread "+(currentTaskIndex + 1));
+        /*try {
+
+          //System.out.println("RMS Pausing thread "+(currentTaskIndex + 1)); //NOTE: THIS IS WHERE THE RMS GETS STUCK WHEN THERE IS AN OVERRUN!! THE BOTTOM PRINT STATEMENT NEVER PRINTS
           arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].Pause();
           //System.out.println("RMS Paused thread "+(currentTaskIndex + 1));
 
@@ -175,7 +208,7 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
           //System.out.println("Exception caught");
 
-        }
+        }*/
 
       }
 
@@ -192,16 +225,17 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
           //System.out.println("Number of frame periods completed: "+numberOfFramePeriodsCompleted);
 
+          //dispatcher.stop();
+
           //done
           for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
 
-            arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().release();
             arrayOfObjectsToCreateAndScheduleThreadsFor[i].stop();
+            arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().release();
 
           }
 
           printResults();
-          dispatcher.stop();
           break;
 
         }
@@ -215,19 +249,20 @@ class RMS <T extends SchedularContainer> implements Runnable{
       threadsCreated[0].start();
       arrayOfObjectsToCreateAndScheduleThreadsFor[0].setHasBeenScheduled(true);
 
+      //System.out.println("Closing semaphores of the other threads, and creating new threads");
+
       for (int i = 1; i < threadsCreated.length; i++) {
 
         //Close the semaphores of the other threads:
-        if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().tryAcquire()) {
+        arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().release();
 
-          try {
+        try {
 
-            arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().acquire();
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().acquire();
 
-          } catch (Exception e) {
+        }
+        catch (Exception e) {
 
-
-          }
 
         }
 
@@ -236,31 +271,36 @@ class RMS <T extends SchedularContainer> implements Runnable{
           //reschedule this thread
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setFrameTaskMustBeCompletedBy(currentFrame + arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod());
           threadsCreated[i] = new Thread(arrayOfObjectsToCreateAndScheduleThreadsFor[i]);
-          //arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
+          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
 
           try {
 
             threadsCreated[i].start();
+            //arrayOfObjectsToCreateAndScheduleThreadsFor[i].Pause();
 
           } catch (Exception e) {
 
           }
 
         }
-        else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)) {
+        /*else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)) {
 
           //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(false);
 
-          if ((i - 1) >= 0) {
+          //if ((i - 1) >= 0) {
 
             //arrayOfObjectsToCreateAndScheduleThreadsFor[i - 1].setSemaphoreOfOtherTaskThatMustWaitForMeToFinish(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish());
 
-          }
+          //}
 
-        }
+        } */
 
       }
+
+      //System.out.println("Done Closing semaphores of the other threads, and creating new threads");
+
+      //ResetSemaphoreReferences();
 
       dispatcher = new Dispatcher(this);
       Thread dispatchThread = new Thread(dispatcher);

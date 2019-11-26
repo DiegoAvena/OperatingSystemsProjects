@@ -48,14 +48,27 @@ class Dispatcher implements Runnable {
 
         }
 
-        if (semaphoresOfTasks[i].tryAcquire() /*&& arrayOfTasks[i].getHasBeenScheduled()*/) {
+        if (semaphoresOfTasks[i].tryAcquire() && arrayOfTasks[i].getHasBeenScheduled()) {
 
             //resume the task thread:
             //System.out.println("Dispatcher resuming thread "+(i + 1));
+            arrayOfTasks[i].setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(false);
             rmsToListenTo.setCurrentTaskIndex(i);
-            arrayOfTasks[i].Resume();
             threadsForTheTasks[i].interrupt();
             break;
+
+        }
+        else if ((arrayOfTasks[i].getHasBeenScheduled() == false) /*&& (arrayOfTasks[i].getAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn() == false)*/) {
+
+          arrayOfTasks[i].setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(true);
+
+          //Allow thread waiting for this thread to finish to run now:
+          if (arrayOfTasks[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish() != null) {
+
+            //System.out.println("Telling task "+(i + 1)+" to release there semaphore and start, since I am skipping my turn");
+            arrayOfTasks[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish().release();
+
+          }
 
         }
 

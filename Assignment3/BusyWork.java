@@ -15,87 +15,45 @@ class BusyWork extends SchedularContainer {
 
     finishedRunning = false;
 
-    while (exit == false) {
+    if (exit) {
 
-      /*if (mySemaphore.tryAcquire() == false) {
-
-        System.out.println("Task with period "+taskPeriod+" is waiting on semaphore");
-
-        if (exit) {
-
-          break;
-
-        }
-
-        try {
-
-          Thread.sleep(Long.MAX_VALUE);
-
-        }
-        catch (InterruptedException e) {
-
-          Thread.currentThread().interrupt(); // preserve interruption status
-
-        }
-
-      }
-      else {
-
-        try {
-
-          System.out.println("Task with period "+taskPeriod+" is acquiring semaphore");
-          mySemaphore.acquire();
-          System.out.println("Task with period "+taskPeriod+" acquired semaphore");
-
-        }
-        catch (Exception e) {
-
-
-        }
-
-      } */
-
-      try {
-
-        //System.out.println("Task with period "+taskPeriod+" is acquiring semaphore");
-        mySemaphore.acquire();
-        //System.out.println("Task with period "+taskPeriod+" acquired semaphore");
-
-      }
-      catch (Exception e) {
-
-
-      }
-
-      for (int i = 0; i < howManyTimesToWork; i++) {
-
-        if (exit) {
-
-          break;
-
-        }
-
-        DoWork();
-
-      }
-
-      //System.out.println("Task with period "+taskPeriod+" is running.");
-
-      numberOfTimesThreadHasRan++;
-      finishedRunning = true;
-
-      //System.out.println("Task with period "+taskPeriod+" is done running.");
-
-      if (semaphoreOfOtherTaskThatMustWaitForMeToFinish != null) {
-
-        semaphoreOfOtherTaskThatMustWaitForMeToFinish.release();
-
-      }
-
-      //RMSThread.interrupt(); //wakes up RMS so that another task may be scheduled
-      break;
+      return;
 
     }
+
+    try {
+
+      //System.out.println("Task with period "+taskPeriod+" waiting on semaphore");
+      mySemaphore.acquire();
+      //System.out.println("Task with period "+taskPeriod+" obtained semaphore");
+
+    }
+    catch (Exception e) {
+
+
+    }
+
+    for (int i = 0; i < howManyTimesToWork; i++) {
+
+      if (exit) {
+
+        break;
+
+      }
+
+      CheckIfThreadShouldPauseAndWait();
+      DoWork();
+
+    }
+
+    if (semaphoreOfOtherTaskThatMustWaitForMeToFinish != null) {
+
+      semaphoreOfOtherTaskThatMustWaitForMeToFinish.release();
+
+    }
+
+    finishedRunning = true;
+    numberOfTimesThreadHasRan++;
 
   }
 
@@ -120,10 +78,23 @@ class BusyWork extends SchedularContainer {
 
     for (int i = 0; i < 10; i++) {
 
+      if (exit) {
+
+        break;
+
+      }
+
+      CheckIfThreadShouldPauseAndWait();
 
       currentColumnInMatrix = orderInWhichToTraverseColumnsOfMatrixBy[i];
 
       for (int row = 0; row < 10; row++) {
+
+        if (exit) {
+
+          break;
+
+        }
 
         product *= matrix[row][currentColumnInMatrix];
 

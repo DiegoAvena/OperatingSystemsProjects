@@ -15,7 +15,10 @@ public abstract class SchedularContainer implements Runnable {
   protected boolean finishedRunning; //signals that this task finished
   protected boolean thisTaskRecentlyOverranItsDeadline;
 
+  protected boolean alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
+
   protected boolean exit;
+  protected boolean threadShouldPauseAndWait;
 
   protected Semaphore mySemaphore;
   protected Semaphore semaphoreOfOtherTaskThatMustWaitForMeToFinish;
@@ -40,6 +43,18 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
+  public boolean getAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn() {
+
+    return alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
+
+  }
+
+  public void setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(boolean alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn) {
+
+    this.alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn = alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
+
+  }
+
   public boolean getHasBeenScheduled() {
 
     return hasBeenScheduled;
@@ -61,6 +76,18 @@ public abstract class SchedularContainer implements Runnable {
   public Semaphore getSemaphoreOfOtherTaskThatMustWaitForMeToFinish() {
 
     return semaphoreOfOtherTaskThatMustWaitForMeToFinish;
+
+  }
+
+  public void setMySemaphore(Semaphore mySemaphore) {
+
+    this.mySemaphore = mySemaphore;
+
+  }
+
+  public void SetSemaphoreFree() {
+
+    mySemaphore.release();
 
   }
 
@@ -136,19 +163,41 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
+  protected void CheckIfThreadShouldPauseAndWait() {
+
+    if (threadShouldPauseAndWait) {
+
+      try {
+
+        Thread.sleep(Long.MAX_VALUE);
+
+      } catch (InterruptedException e) {
+
+        threadShouldPauseAndWait = false;
+
+      }
+
+    }
+
+  }
+
   public void Pause() {
 
-    try {
+    threadShouldPauseAndWait = true;
+
+    /*try {
 
       //System.out.println("THREAD PAUSED");
       //System.out.println("Thread done running: "+finishedRunning);
-      Thread.sleep(Long.MAX_VALUE);
+      //Thread.sleep(Long.MAX_VALUE);
+      //Thread.currentThread().sleep(Long.MAX_VALUE);
+      threadShouldPauseAndWait = true;
 
     } catch (InterruptedException e) {
 
-      //System.out.println("Thread resumed");
+      System.out.println("Thread resumed");
 
-    }
+    } */
 
   }
 
