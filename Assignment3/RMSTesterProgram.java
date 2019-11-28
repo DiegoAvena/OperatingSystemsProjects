@@ -50,6 +50,17 @@ class RMSTesterProgram {
 
     RMSThread.start();
 
+    try {
+
+      RMSThread.join();
+
+    } catch (Exception e) {
+
+
+    }
+
+    System.exit(0);
+
   }
 
 }

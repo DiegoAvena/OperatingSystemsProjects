@@ -24,10 +24,14 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
   private boolean RMSIsDone;
 
+  private Semaphore RMSSemaphore;
+
   private Dispatcher dispatcher;
   Thread dispatchThread;
 
   public RMS(T[] arrayOfObjectsToCreateAndScheduleThreadsFor, int unitSize) {
+
+    RMSSemaphore = new Semaphore(1);
 
     this.arrayOfObjectsToCreateAndScheduleThreadsFor = arrayOfObjectsToCreateAndScheduleThreadsFor;
     this.unitSize = unitSize;
@@ -39,6 +43,12 @@ class RMS <T extends SchedularContainer> implements Runnable{
     currentTaskIndex = 0;
 
     threadsCreated = new Thread[arrayOfObjectsToCreateAndScheduleThreadsFor.length];
+
+  }
+
+  public Semaphore getRMSSemaphore() {
+
+    return RMSSemaphore;
 
   }
 
@@ -130,13 +140,27 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
     try {
 
+      RMSSemaphore.acquire();
+
+    } catch (Exception e) {
+
+
+
+    }
+
+    Timer timer = new Timer();
+    RMSWaker waker = new RMSWaker(RMSSemaphore);
+    timer.schedule(waker, idleFramePeriod * unitSize);
+
+    /*try {
+
       //make rms go to sleep for an idle frame period * unitSize:
       Thread.sleep(idleFramePeriod * unitSize);
 
     } catch (InterruptedException e) {
 
 
-    }
+    } */
 
   }
 
@@ -146,12 +170,22 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       //System.out.println("Current frame count: "+currentFrame);
       //ResetSemaphoreReferences();
+      try {
+
+        RMSSemaphore.acquire();
+
+      } catch (Exception e) {
+
+
+
+      }
+
       dispatcher.stop();
       currentFrame++;
       //amountOfTimeElapsedSinceStartOfCurrentFramePeriod = System.currentTimeMillis() - timeSchedularBeganCurrentFramePeriodAt;
 
       //check for overruns in current task:
-      for (int i = 1; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
+      for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
 
         if ((arrayOfObjectsToCreateAndScheduleThreadsFor[i].getFrameTaskMustBeCompletedBy() > currentFrame) && (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getFinishedRunning() == false) && (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() == false)) {
 
@@ -162,7 +196,7 @@ class RMS <T extends SchedularContainer> implements Runnable{
           //break;
 
         }
-        else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() /*&& ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)*/) {
+        else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)) {
 
           //System.out.println("Task "+(currentTaskIndex + 1)+"is can now be scheduled for its upcomming execution period, since it already skipped an execution period due to an overrun.");
 
@@ -198,18 +232,6 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
         arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].Pause();
 
-        /*try {
-
-          //System.out.println("RMS Pausing thread "+(currentTaskIndex + 1)); //NOTE: THIS IS WHERE THE RMS GETS STUCK WHEN THERE IS AN OVERRUN!! THE BOTTOM PRINT STATEMENT NEVER PRINTS
-          arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].Pause();
-          //System.out.println("RMS Paused thread "+(currentTaskIndex + 1));
-
-        } catch (Exception e){
-
-          //System.out.println("Exception caught");
-
-        }*/
-
       }
 
       if (currentFrame == framePeriod) {
@@ -230,10 +252,12 @@ class RMS <T extends SchedularContainer> implements Runnable{
           //done
           for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
 
-            arrayOfObjectsToCreateAndScheduleThreadsFor[i].stop();
             arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().release();
+            arrayOfObjectsToCreateAndScheduleThreadsFor[i].stop();
 
           }
+
+          RMSSemaphore.release();
 
           printResults();
           break;
@@ -241,6 +265,8 @@ class RMS <T extends SchedularContainer> implements Runnable{
         }
 
       }
+
+      //System.out.println("HELLO");
 
       //Reschedule thread 1, since the frame period is always the period of thread 1
       arrayOfObjectsToCreateAndScheduleThreadsFor[0].getSemaphore().release();
@@ -306,11 +332,18 @@ class RMS <T extends SchedularContainer> implements Runnable{
       Thread dispatchThread = new Thread(dispatcher);
       dispatchThread.start();
 
-      try {
+      Timer timer = new Timer();
+      RMSWaker waker = new RMSWaker(RMSSemaphore);
+      timer.schedule(waker, idleFramePeriod * unitSize);
+
+      /*try {
 
         //System.out.println("RMS going to sleep");
         //make rms go to sleep for an idle frame period * unitSize:
-        Thread.sleep(idleFramePeriod * unitSize);
+        //Thread.sleep(idleFramePeriod * unitSize);
+      //  Timer timer = new Timer();
+        //RMSWaker waker = new RMSWaker(RMSSemaphore);
+        timer.schedule(waker, idleFramePeriod * unitSize);
 
       }
       catch (InterruptedException e){
@@ -318,9 +351,21 @@ class RMS <T extends SchedularContainer> implements Runnable{
         //wake up
         //Thread.currentThread().interrupt(); // preserve interruption status
 
-      }
+      } */
 
     }
+
+    System.out.println("Semaphores being waited on: ");
+    for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
+
+      System.out.println(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().hasQueuedThreads());
+
+    }
+
+    System.out.println(RMSSemaphore.hasQueuedThreads());
+
+    System.out.println("DONE!");
+    RMSSemaphore.release();
 
   }
 

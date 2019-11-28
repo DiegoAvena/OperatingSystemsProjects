@@ -38,6 +38,8 @@ class Dispatcher implements Runnable {
 
     while (exit == false) {
 
+      //System.out.println("Dispatcher running");
+
       //wake up threads whose semaphores are available:
       for (int i = 1; i < semaphoresOfTasks.length; i++) {
 
@@ -48,7 +50,7 @@ class Dispatcher implements Runnable {
 
         }
 
-        if (semaphoresOfTasks[i].tryAcquire() && arrayOfTasks[i].getHasBeenScheduled()) {
+        if (/*semaphoresOfTasks[i].tryAcquire()*/arrayOfTasks[i - 1].getFinishedRunning() && arrayOfTasks[i].getHasBeenScheduled()) {
 
             //resume the task thread:
             //System.out.println("Dispatcher resuming thread "+(i + 1));
