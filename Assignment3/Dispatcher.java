@@ -38,8 +38,6 @@ class Dispatcher implements Runnable {
 
     while (exit == false) {
 
-      //System.out.println("Dispatcher running");
-
       //wake up threads whose semaphores are available:
       for (int i = 1; i < semaphoresOfTasks.length; i++) {
 
@@ -50,24 +48,19 @@ class Dispatcher implements Runnable {
 
         }
 
-        if (/*semaphoresOfTasks[i].tryAcquire()*/arrayOfTasks[i - 1].getFinishedRunning() && arrayOfTasks[i].getHasBeenScheduled()) {
+        if (arrayOfTasks[i - 1].getFinishedRunning() && arrayOfTasks[i].getHasBeenScheduled()) {
 
-            //resume the task thread:
-            //System.out.println("Dispatcher resuming thread "+(i + 1));
-            arrayOfTasks[i].setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(false);
+            //resume the task thread, since previous task has finished running, which means the semaphore of this task is available:
             rmsToListenTo.setCurrentTaskIndex(i);
             threadsForTheTasks[i].interrupt();
             break;
 
         }
-        else if ((arrayOfTasks[i].getHasBeenScheduled() == false) /*&& (arrayOfTasks[i].getAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn() == false)*/) {
-
-          arrayOfTasks[i].setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(true);
+        else if ((arrayOfTasks[i].getHasBeenScheduled() == false)) {
 
           //Allow thread waiting for this thread to finish to run now:
           if (arrayOfTasks[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish() != null) {
 
-            //System.out.println("Telling task "+(i + 1)+" to release there semaphore and start, since I am skipping my turn");
             arrayOfTasks[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish().release();
 
           }

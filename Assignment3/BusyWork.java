@@ -1,5 +1,10 @@
 import java.util.concurrent.*;
 
+/*
+
+The task that the RMS will be scheduling.
+
+*/
 class BusyWork extends SchedularContainer {
 
   private int howManyTimesToWork; //specifies how many times this thread should run DoWork()
@@ -23,9 +28,7 @@ class BusyWork extends SchedularContainer {
 
     try {
 
-      //System.out.println("Task with period "+taskPeriod+" waiting on semaphore");
       mySemaphore.acquire();
-      //System.out.println("Task with period "+taskPeriod+" obtained semaphore");
 
     }
     catch (Exception e) {

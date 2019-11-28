@@ -14,11 +14,6 @@ class RMSTesterProgram {
 
     Thread RMSThread = new Thread(scheduler);
 
-    taskOne.setRMSThread(RMSThread);
-    taskTwo.setRMSThread(RMSThread);
-    taskThree.setRMSThread(RMSThread);
-    taskFour.setRMSThread(RMSThread);
-
     RMSThread.start();
 
     try {
@@ -42,11 +37,6 @@ class RMSTesterProgram {
     scheduler = new RMS<BusyWork>(arrayOfTasks, 10);
 
     RMSThread = new Thread(scheduler);
-
-    taskOne.setRMSThread(RMSThread);
-    taskTwo.setRMSThread(RMSThread);
-    taskThree.setRMSThread(RMSThread);
-    taskFour.setRMSThread(RMSThread);
 
     RMSThread.start();
 

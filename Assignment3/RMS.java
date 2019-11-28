@@ -9,8 +9,9 @@ class RMS <T extends SchedularContainer> implements Runnable{
   on the thread priority
 
   */
-  private T[] arrayOfObjectsToCreateAndScheduleThreadsFor;
-  private Thread[] threadsCreated;
+  private T[] arrayOfObjectsToCreateAndScheduleThreadsFor; //Contains the actual objects going into the threads, is sorted from least period to greatest before thread creation
+  private Thread[] threadsCreated; //Keeps track of all the threads created
+  private int[] threadPriorities; //Stores the assigned thread priorities, so that when threads are recreated the same priority can be used, these are in order, so index 0 stores the priority of the thread at index 0 in the array above, etc
   private int unitSize; //should be between 10ms to 100ms
 
   private int framePeriod; //For this assignment, the program ends when the scheduler goes through this frame period 10x
@@ -18,16 +19,12 @@ class RMS <T extends SchedularContainer> implements Runnable{
   private int numberOfFramePeriodsCompleted; //number of frame periods completed so far
   private int currentFrame; //when this mod framePeriod is 0, I increment numberOfFramePeriodsCompleted
   private int idleFramePeriod; //how long the RMS sleeps for until it wakes up on its own to being a new frame
-  private int currentTaskIndex;
-  private float timeSchedularBeganCurrentFramePeriodAt;
-  private float amountOfTimeElapsedSinceStartOfCurrentFramePeriod;
+  private int currentTaskIndex; //The index of the current thread that was most recently running, so that it can be paused without having to loop over the other threads
 
-  private boolean RMSIsDone;
+  private Semaphore RMSSemaphore; //the semaphore that the RMS waits on before scheduling again
 
-  private Semaphore RMSSemaphore;
-
-  private Dispatcher dispatcher;
-  Thread dispatchThread;
+  private Dispatcher dispatcher; //while RMS waits, this dispatcher resumes threads this RMS scheduled by checking if the previous thread running is done
+  Thread dispatchThread; //the thread the dispatcher goes on
 
   public RMS(T[] arrayOfObjectsToCreateAndScheduleThreadsFor, int unitSize) {
 
@@ -43,6 +40,7 @@ class RMS <T extends SchedularContainer> implements Runnable{
     currentTaskIndex = 0;
 
     threadsCreated = new Thread[arrayOfObjectsToCreateAndScheduleThreadsFor.length];
+    threadPriorities = new int[arrayOfObjectsToCreateAndScheduleThreadsFor.length];
 
   }
 
@@ -71,12 +69,6 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
   }
 
-  public boolean getRMSIsDone() {
-
-    return RMSIsDone;
-
-  }
-
   public T[] getArrayOfObjectsToCreateAndScheduleThreadsFor() {
 
     return arrayOfObjectsToCreateAndScheduleThreadsFor;
@@ -92,13 +84,6 @@ class RMS <T extends SchedularContainer> implements Runnable{
   private void initialize() {
 
     AssignPrioritiesAndCreateThreads();
-
-    //for debugging:
-    for (int i = 0; i < threadsCreated.length; i++) {
-
-      //System.out.println("Thread "+(i + 1)+" has been assigned a priority of: "+threadsCreated[i].getPriority());
-
-    }
 
     //want the idle frame period to be as small as the smallest period for the threads that need to be scheduled:
     idleFramePeriod = arrayOfObjectsToCreateAndScheduleThreadsFor[0].getTaskPeriod();
@@ -122,21 +107,15 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
     }
 
-    timeSchedularBeganCurrentFramePeriodAt = System.currentTimeMillis();
-
     //At time 0, all threads scheduled:
-    //threadsCreated[0].start();
     for (int i = 0; i < threadsCreated.length; i++) {
 
-      //System.out.println("Starting thread "+ (i + 1));
       threadsCreated[i].start();
       arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
 
     }
 
-    dispatcher = new Dispatcher(this);
-    Thread dispatchThread = new Thread(dispatcher);
-    dispatchThread.start();
+    launchDispatcher();
 
     try {
 
@@ -144,23 +123,25 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
     } catch (Exception e) {
 
-
-
     }
+
+    startTimerUntilNextSchedulingOccurs();
+
+  }
+
+  private void launchDispatcher() {
+
+    dispatcher = new Dispatcher(this);
+    Thread dispatchThread = new Thread(dispatcher);
+    dispatchThread.start();
+
+  }
+
+  private void startTimerUntilNextSchedulingOccurs() {
 
     Timer timer = new Timer();
     RMSWaker waker = new RMSWaker(RMSSemaphore);
     timer.schedule(waker, idleFramePeriod * unitSize);
-
-    /*try {
-
-      //make rms go to sleep for an idle frame period * unitSize:
-      Thread.sleep(idleFramePeriod * unitSize);
-
-    } catch (InterruptedException e) {
-
-
-    } */
 
   }
 
@@ -168,8 +149,6 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
     while (true) {
 
-      //System.out.println("Current frame count: "+currentFrame);
-      //ResetSemaphoreReferences();
       try {
 
         RMSSemaphore.acquire();
@@ -182,7 +161,6 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       dispatcher.stop();
       currentFrame++;
-      //amountOfTimeElapsedSinceStartOfCurrentFramePeriod = System.currentTimeMillis() - timeSchedularBeganCurrentFramePeriodAt;
 
       //check for overruns in current task:
       for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
@@ -193,39 +171,17 @@ class RMS <T extends SchedularContainer> implements Runnable{
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(true); //so that this task skips its next execution period
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].SetNumberOfTimesThreadOverran(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getNumberOfTimesThreadOverran() + 1);
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(false);
-          //break;
 
         }
         else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)) {
 
-          //System.out.println("Task "+(currentTaskIndex + 1)+"is can now be scheduled for its upcomming execution period, since it already skipped an execution period due to an overrun.");
-
           //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(false);
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true); //so that dispatcher knows it can now resume this thread for completion
-          //break;
 
         }
 
       }
-
-      /*if ((arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFrameTaskMustBeCompletedBy() > currentFrame) && (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFinishedRunning() == false) && (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getThisTaskRecentlyOverranItsDeadline() == false)) {
-
-        //this task had an overrun:
-        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setThisTaskRecentlyOverranItsDeadline(true); //so that this task skips its next execution period
-        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].SetNumberOfTimesThreadOverran(arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getNumberOfTimesThreadOverran() + 1);
-        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setHasBeenScheduled(false);
-
-      }
-      else if (arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getTaskPeriod()) == 0)) {
-
-        //System.out.println("Task "+(currentTaskIndex + 1)+"is can now be scheduled for its upcomming execution period, since it already skipped an execution period due to an overrun.");
-
-        //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
-        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setThisTaskRecentlyOverranItsDeadline(false);
-        arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].setHasBeenScheduled(true); //so that dispatcher knows it can now resume this thread for completion
-
-      } */
 
       //pause thread that was running, since thread 1 now needs to run
       if ((arrayOfObjectsToCreateAndScheduleThreadsFor[currentTaskIndex].getFinishedRunning() == false) && (currentTaskIndex != 0)) {
@@ -234,20 +190,15 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       }
 
+      //Check if RMS has completed another frame period (RMS should only run for 10 frame periods, then everything ends)
       if (currentFrame == framePeriod) {
 
-        //System.out.println("Current frame: "+currentFrame);
-
-        //timeSchedularBeganCurrentFramePeriodAt = System.currentTimeMillis();
         currentFrame = 0;
         numberOfFramePeriodsCompleted++;
         currentTaskIndex = 0;
 
+        //Check if RMS is done, (rms has completed 10 frame periods)
         if (numberOfFramePeriodsCompleted == numberOfFramePeriodsToComplete) {
-
-          //System.out.println("Number of frame periods completed: "+numberOfFramePeriodsCompleted);
-
-          //dispatcher.stop();
 
           //done
           for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
@@ -266,29 +217,23 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       }
 
-      //System.out.println("HELLO");
+      //Reschedule threads:
+      for (int i = 0; i < threadsCreated.length; i++) {
 
-      //Reschedule thread 1, since the frame period is always the period of thread 1
-      arrayOfObjectsToCreateAndScheduleThreadsFor[0].getSemaphore().release();
-      arrayOfObjectsToCreateAndScheduleThreadsFor[0].setFrameTaskMustBeCompletedBy(currentFrame + arrayOfObjectsToCreateAndScheduleThreadsFor[0].getTaskPeriod());
-      threadsCreated[0] = new Thread(arrayOfObjectsToCreateAndScheduleThreadsFor[0]);
-      threadsCreated[0].start();
-      arrayOfObjectsToCreateAndScheduleThreadsFor[0].setHasBeenScheduled(true);
-
-      //System.out.println("Closing semaphores of the other threads, and creating new threads");
-
-      for (int i = 1; i < threadsCreated.length; i++) {
-
-        //Close the semaphores of the other threads:
         arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().release();
 
-        try {
+        if (i > 0) {
 
-          arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().acquire();
+          //Close the semaphores of the other threads:
+          try {
 
-        }
-        catch (Exception e) {
+            arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().acquire();
 
+          }
+          catch (Exception e) {
+
+
+          }
 
         }
 
@@ -297,89 +242,23 @@ class RMS <T extends SchedularContainer> implements Runnable{
           //reschedule this thread
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setFrameTaskMustBeCompletedBy(currentFrame + arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod());
           threadsCreated[i] = new Thread(arrayOfObjectsToCreateAndScheduleThreadsFor[i]);
+          threadsCreated[i].setPriority(threadPriorities[i]);
           arrayOfObjectsToCreateAndScheduleThreadsFor[i].setHasBeenScheduled(true);
 
           try {
 
             threadsCreated[i].start();
-            //arrayOfObjectsToCreateAndScheduleThreadsFor[i].Pause();
 
           } catch (Exception e) {
 
           }
 
         }
-        /*else if (arrayOfObjectsToCreateAndScheduleThreadsFor[i].getThisTaskRecentlyOverranItsDeadline() && ((currentFrame % arrayOfObjectsToCreateAndScheduleThreadsFor[i].getTaskPeriod()) == 0)) {
-
-          //Insures that while the scheduling of this thread is skipped for its next execution period, it does not skip the one after
-          arrayOfObjectsToCreateAndScheduleThreadsFor[i].setThisTaskRecentlyOverranItsDeadline(false);
-
-          //if ((i - 1) >= 0) {
-
-            //arrayOfObjectsToCreateAndScheduleThreadsFor[i - 1].setSemaphoreOfOtherTaskThatMustWaitForMeToFinish(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphoreOfOtherTaskThatMustWaitForMeToFinish());
-
-          //}
-
-        } */
 
       }
 
-      //System.out.println("Done Closing semaphores of the other threads, and creating new threads");
-
-      //ResetSemaphoreReferences();
-
-      dispatcher = new Dispatcher(this);
-      Thread dispatchThread = new Thread(dispatcher);
-      dispatchThread.start();
-
-      Timer timer = new Timer();
-      RMSWaker waker = new RMSWaker(RMSSemaphore);
-      timer.schedule(waker, idleFramePeriod * unitSize);
-
-      /*try {
-
-        //System.out.println("RMS going to sleep");
-        //make rms go to sleep for an idle frame period * unitSize:
-        //Thread.sleep(idleFramePeriod * unitSize);
-      //  Timer timer = new Timer();
-        //RMSWaker waker = new RMSWaker(RMSSemaphore);
-        timer.schedule(waker, idleFramePeriod * unitSize);
-
-      }
-      catch (InterruptedException e){
-
-        //wake up
-        //Thread.currentThread().interrupt(); // preserve interruption status
-
-      } */
-
-    }
-
-    System.out.println("Semaphores being waited on: ");
-    for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
-
-      System.out.println(arrayOfObjectsToCreateAndScheduleThreadsFor[i].getSemaphore().hasQueuedThreads());
-
-    }
-
-    System.out.println(RMSSemaphore.hasQueuedThreads());
-
-    System.out.println("DONE!");
-    RMSSemaphore.release();
-
-  }
-
-  void ResetSemaphoreReferences() {
-
-    arrayOfObjectsToCreateAndScheduleThreadsFor[0].getSemaphore().release();
-
-    for (int i = 0; i < arrayOfObjectsToCreateAndScheduleThreadsFor.length; i++) {
-
-      if ((i + 1) < arrayOfObjectsToCreateAndScheduleThreadsFor.length) {
-
-        arrayOfObjectsToCreateAndScheduleThreadsFor[i].setSemaphoreOfOtherTaskThatMustWaitForMeToFinish(arrayOfObjectsToCreateAndScheduleThreadsFor[i + 1].getSemaphore());
-
-      }
+      launchDispatcher();
+      startTimerUntilNextSchedulingOccurs();
 
     }
 
@@ -439,6 +318,8 @@ class RMS <T extends SchedularContainer> implements Runnable{
 
       Thread thread = new Thread(arrayOfObjectsToCreateAndScheduleThreadsFor[i]);
       thread.setPriority(currentPriority);
+      threadPriorities[i] = currentPriority;
+
       currentPriority--;
       threadsCreated[i] = thread;
 

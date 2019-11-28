@@ -11,23 +11,27 @@ handled by the RMS
 public abstract class SchedularContainer implements Runnable {
 
   protected int numberOfTimesThreadHasRan; //keeps track of how many times this task has ran
-  private int numberOfTimesThreadOverran;
-  protected boolean finishedRunning; //signals that this task finished
-  protected boolean thisTaskRecentlyOverranItsDeadline;
+  private int numberOfTimesThreadOverran; //the counter that tracks how many times this task overran its deadline
+  protected boolean finishedRunning; //signals that this task finished, used to help detect an overrun
+  protected boolean thisTaskRecentlyOverranItsDeadline; //set to true when this task overruns, set to false after 1 execution period has passed
 
-  protected boolean alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
+  protected boolean exit; //if true, the thread this task is on will quit
+  protected boolean threadShouldPauseAndWait; //If true, puts the thread this task is on to sleep until it is awakened again, the thread will not exit with this
 
-  protected boolean exit;
-  protected boolean threadShouldPauseAndWait;
+  protected Semaphore mySemaphore; //the semaphore of this task
 
-  protected Semaphore mySemaphore;
+  /*
+
+  -the semaphore of a task waiting for this task to finish, (task 3 waits for task 2 to finish, and task 4 waits for task 3 to finish,
+  when this task finishes, it must release the semaphore of the task waiting on it)
+
+  */
   protected Semaphore semaphoreOfOtherTaskThatMustWaitForMeToFinish;
 
   //Used by the RMS:
-  protected int taskPeriod;
-  protected int frameTaskMustBeCompletedBy;
-  protected Thread RMSThread;
-  protected boolean hasBeenScheduled;
+  protected int taskPeriod; //the period for this task
+  protected int frameTaskMustBeCompletedBy; //the deadline of this task
+  protected boolean hasBeenScheduled; //true if RMS scheduled this task, false for 1 execution period in cases where task misses its deadline
 
   public abstract void run();
 
@@ -40,18 +44,6 @@ public abstract class SchedularContainer implements Runnable {
 
     //Used by the RMS:
     taskPeriod = 0;
-
-  }
-
-  public boolean getAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn() {
-
-    return alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
-
-  }
-
-  public void setAlreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn(boolean alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn) {
-
-    this.alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn = alreadyAllowedPersonWaitingOnMeToGoSinceIAmSkippingThisTurn;
 
   }
 
@@ -109,12 +101,6 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
-  public void setRMSThread(Thread RMSThread) {
-
-    this.RMSThread = RMSThread;
-
-  }
-
   public void SetNumberOfTimesThreadOverran(int numberOfTimesThreadOverran) {
 
     this.numberOfTimesThreadOverran = numberOfTimesThreadOverran;
@@ -163,6 +149,7 @@ public abstract class SchedularContainer implements Runnable {
 
   }
 
+  //Pauses the thread
   protected void CheckIfThreadShouldPauseAndWait() {
 
     if (threadShouldPauseAndWait) {
@@ -184,26 +171,6 @@ public abstract class SchedularContainer implements Runnable {
   public void Pause() {
 
     threadShouldPauseAndWait = true;
-
-    /*try {
-
-      //System.out.println("THREAD PAUSED");
-      //System.out.println("Thread done running: "+finishedRunning);
-      //Thread.sleep(Long.MAX_VALUE);
-      //Thread.currentThread().sleep(Long.MAX_VALUE);
-      threadShouldPauseAndWait = true;
-
-    } catch (InterruptedException e) {
-
-      System.out.println("Thread resumed");
-
-    } */
-
-  }
-
-  public void Resume() {
-
-    //interrupt();
 
   }
 
