@@ -17,7 +17,7 @@ class RMS <T extends SchedularContainer> implements Runnable{
   private int framePeriod; //For this assignment, the program ends when the scheduler goes through this frame period 10x
   private int numberOfFramePeriodsToComplete; //program ends when numberOfFramePeriodsCompleted >= this
   private int numberOfFramePeriodsCompleted; //number of frame periods completed so far
-  private int currentFrame; //when this mod framePeriod is 0, I increment numberOfFramePeriodsCompleted
+  private int currentFrame; //when this equals the framePeriod, I increment numberOfFramePeriodsCompleted
   private int idleFramePeriod; //how long the RMS sleeps for until it wakes up on its own to being a new frame
   private int currentTaskIndex; //The index of the current thread that was most recently running, so that it can be paused without having to loop over the other threads
 
