@@ -19,6 +19,7 @@ class BusyWork extends SchedularContainer {
   public void run() {
 
     finishedRunning = false;
+    numberOfTimesThreadHasRan++;
 
     if (exit) {
 
@@ -56,7 +57,6 @@ class BusyWork extends SchedularContainer {
     }
 
     finishedRunning = true;
-    numberOfTimesThreadHasRan++;
 
   }
 
